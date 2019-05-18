@@ -3,7 +3,7 @@
 A toolkit library for [Julia](http://julialang.org/).
 
 ## Project Status
-
+[![Build Status](https://travis-ci.org/juliakit/Kit.jl.svg?branch=master)](https://travis-ci.org/juliakit/Kit.jl)
 
 ## Documentation
 
