@@ -1,4 +1,4 @@
-name = "JuliaKit"
+name = "Kit"
 uuid = "f3bba2a0-7958-11e9-34b2-8fb942d32ac7"
 authors = ["Billgo <cocobill@vip.qq.com>"]
 version = "0.1.0"

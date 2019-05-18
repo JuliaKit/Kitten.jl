@@ -1,7 +1,7 @@
-# JuliaKit
+# Kit.jl
 
-JuliaKit Julia package repo.
+JuliaKit package repo.
 
 ```@autodocs
-Modules = [JuliaKit]
+Modules = [Kit]
 ```

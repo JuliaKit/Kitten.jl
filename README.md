@@ -1,4 +1,4 @@
-# JuliaKit.jl
+# Kit.jl
 
 A toolkit library for [Julia](http://julialang.org/).
 

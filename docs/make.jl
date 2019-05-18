@@ -1,7 +1,7 @@
-using Documenter, JuliaKit
+using Documenter, Kit
 
-makedocs(modules = [JuliaKit], sitename = "JuliaKit.jl")
+makedocs(modules = [Kit], sitename = "Kit.jl")
 
 deploydocs(
-    repo = "github.com/JuliaKit/JuliaKit.jl.git",
+    repo = "github.com/JuliaKit/Kit.jl.git",
 )

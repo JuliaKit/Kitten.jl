@@ -1,4 +1,4 @@
-module JuliaKit
+module Kit
 
 import Random
 import JSON
