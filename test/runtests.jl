@@ -6,5 +6,7 @@ else
     using Test
 end
 
-include("Hello.jl")
-include("MathToolkit.jl")
+include("Financial/Financial.jl")
+include("Mathematical/Mathematical.jl")
+
+@test hello("Julia") == "Hello, Julia"

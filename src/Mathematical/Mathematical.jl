@@ -1,4 +1,4 @@
-module MathToolkit
+module Mathematical
 
 export recvec
 export pslq
