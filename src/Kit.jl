@@ -1,8 +1,8 @@
 module Kit
 
-include("MathToolkit/MathToolkit.jl")
-include("Hello/Hello.jl")
+export hello
 
-#export hello, recvec, pslq
+include("Hello.jl")
+include("MathToolkit.jl")
 
 end # module
