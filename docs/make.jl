@@ -1,14 +1,19 @@
 using Documenter, Kit
 
-makedocs(format = Documenter.HTML(
-  prettyurls = get(ENV, "CI", nothing) == "true",
-  assets = ["assets/favicon.ico","assets/logo.png"]    ),
-  sitename="Kit.jl",
+makedocs(
   modules = [Kit],
+  sitename="JuliaKit.jl",
+  authors="Billgo",
   pages = [
     "index.md"
-  ])
+  ]
+)
 
-get(ENV, "CI", nothing) == "true" ? deploydocs(
+deploydocs(
   repo = "github.com/juliakit/Kit.jl.git",
-) : nothing;
+  target = "build",
+  osname = "linux",
+  julia = "1.1",
+  deps = nothing,
+  make = nothing
+)
