@@ -1,8 +1,9 @@
 using Documenter, Kit
 
 makedocs(
+  repo = "https://github.com/juliakit/Kit.jl",
   modules = [Kit],
-  sitename="JuliaKit.jl",
+  sitename="Kit.jl",
   authors="Billgo",
   pages = [
     "index.md"
@@ -11,9 +12,9 @@ makedocs(
 
 deploydocs(
   repo = "github.com/juliakit/Kit.jl.git",
+  branch = "gh-pages",
+  devbranch = "master",
   target = "build",
-  osname = "linux",
-  julia = "1.1",
   deps = nothing,
   make = nothing
 )
