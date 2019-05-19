@@ -1,14 +1,8 @@
 module Kit
 
-import Random
-import JSON
+include("MathToolkit/MathToolkit.jl")
+include("Hello/Hello.jl")
 
-export hello, domath, greet
+#export hello, recvec, pslq
 
-hello(who::String) = "Hello, $who"
-
-domath(x::Number) = x + 5
-
-greet() = print("Hello ", Random.randstring(8))
-
-end
+end # module
