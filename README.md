@@ -13,4 +13,4 @@ Full documentation is found at [JuliaKit](https://juliakit.org/latest/).
 - Kit.Mathematical: providing various functions mainly for the purpose of experimental mathematics.
 
 ## Contributors
-Thanks to all Julia contributors, Love U.
+Thanks for all Julia contributors, Love U.
