@@ -1,6 +1,6 @@
 # Kit.jl
 
-A toolkit library for [Julia](http://julialang.org/).
+A subject toolkit library for [Julia](http://julialang.org/).
 
 ## How to Install
 To install the package simply type on the Julia REPL the following:
