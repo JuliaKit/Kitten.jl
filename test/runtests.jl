@@ -1,12 +1,38 @@
-using Kit
+module RunTests 
 
-if VERSION < v"0.7.0-DEV.2005"
-    using Base.Test
-else
-    using Test
-end
+include("constants.jl"); using .Constants
 
-include("Financial/Financial.jl")
-include("Mathematical/Mathematical.jl")
+#### Extension Tests ####
 
-@test hello("Julia") == "Hello, Julia"
+include("extensions/templatingtests.jl")
+include("extensions/protobuf/protobuftests.jl")
+include("extensions/cairomakietests.jl")
+include("extensions/wglmakietests.jl")
+include("extensions/bonitotests.jl")
+
+#### Sepcial Handler Tests ####
+
+include("ssetests.jl") # Causing issues
+include("websockettests.jl")
+include("streamingtests.jl")
+include("handlertests.jl")
+
+# #### Core Tests ####
+
+include("precompilationtest.jl")
+include("extractortests.jl")
+include("reflectiontests.jl")
+include("metricstests.jl")
+include("routingfunctionstests.jl")
+include("rendertests.jl")
+include("bodyparsertests.jl")
+include("crontests.jl")
+include("oxidise.jl")
+include("instancetests.jl")
+include("paralleltests.jl")
+include("taskmanagement.jl")
+include("cronmanagement.jl")
+include("middlewaretests.jl")
+include("originaltests.jl")
+
+end 
