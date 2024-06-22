@@ -1,10 +1,9 @@
-
-
 # OAuth2 with Umbrella.jl
 
-[Umbrella.jl](https://github.com/jiachengzhang1/Umbrella.jl) is a simple Julia authentication plugin, it supports Google and GitHub OAuth2 with more to come. Umbrella integrates with Julia web framework such as [Genie.jl](https://github.com/GenieFramework/Genie.jl), [Oxygen.jl](https://github.com/OxygenFramework/Oxygen.jl) or [Mux.jl](https://github.com/JuliaWeb/Mux.jl) effortlessly.
+[Umbrella.jl](https://github.com/jiachengzhang1/Umbrella.jl) is a simple Julia authentication plugin, it supports Google and GitHub OAuth2 with more to come. Umbrella integrates with Julia web framework such as [Genie.jl](https://github.com/GenieFramework/Genie.jl), [Kitten.jl](https://github.com/JuliaKit/Kitten.jl) or [Mux.jl](https://github.com/JuliaWeb/Mux.jl) effortlessly.
 
 ## Prerequisite
+
 Before using the plugin, you need to obtain OAuth 2 credentials, see [Google Identity Step 1](https://developers.google.com/identity/protocols/oauth2#1.-obtain-oauth-2.0-credentials-from-the-dynamic_data.setvar.console_name-.), [GitHub: Creating an OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) for details.
 
 ## Installation
@@ -12,15 +11,16 @@ Before using the plugin, you need to obtain OAuth 2 credentials, see [Google Ide
 ```julia
 pkg> add Umbrella
 ```
+
 ## Basic Usage
 
 Many resources are available describing how OAuth 2 works, please advice [OAuth 2.0](https://oauth.net/2/), [Google Identity](https://developers.google.com/identity/protocols/oauth2/web-server#obtainingaccesstokens), or [GitHub OAuth 2](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) for details
 
-Follow the steps below to enable OAuth 2 in your application. 
+Follow the steps below to enable OAuth 2 in your application.
 
 ### 1. Configuration
 
-OAuth 2 required parameters such as `client_id`, `client_secret` and `redirect_uri` need to be configured through `Configuration.Options`. 
+OAuth 2 required parameters such as `client_id`, `client_secret` and `redirect_uri` need to be configured through `Configuration.Options`.
 
 `scopes` is a list of resources the application will access on user's behalf, it is vary from one provider to another.
 
@@ -44,7 +44,7 @@ const options = Configuration.Options(;
 oauth2_instance = init(:google, options)
 ```
 
-The examples will use [Oxygen.jl](https://github.com/OxygenFramework/Oxygen.jl) as the web framework, but the concept is the same for other web frameworks.
+The examples will use [Kitten.jl](https://github.com/JuliaKit/Kitten.jl) as the web framework, but the concept is the same for other web frameworks.
 
 ### 2. Handle provider redirection
 
@@ -72,6 +72,7 @@ Once the users consent to grant access to one or more scopes requested by the ap
 Finally, create the endpoint handling callback from the OAuth 2 server. The path must be identical to the path in `redirect_uri` from `Configuration.Options`.
 
 `token_exchange` function performs two actions,
+
 1. Use `code` responded by the OAuth 2 server to exchange an access token.
 2. Get user profile using the access token.
 
@@ -89,11 +90,10 @@ A handler is required for access/refresh tokens and user profile handling.
 end
 ```
 
-
 ## Full Example
 
 ```julia
-using Oxygen
+using Kitten
 using Umbrella
 using HTTP
 
@@ -125,7 +125,7 @@ end
   code = query_params["code"]
 
   # handle tokens and user details
-  google_oauth2.token_exchange(code, 
+  google_oauth2.token_exchange(code,
     function (tokens::Google.Tokens, user::Google.User)
       println(tokens.access_token)
       println(tokens.refresh_token)

@@ -1,33 +1,33 @@
-# Kernel.jl
+# Kitten.jl
 
 ## About
 
-Kernel is a micro-framework built on top of the HTTP.jl library.
+Kitten is a micro-framework built on top of the HTTP.jl library.
 
 ## Features
 
--   Straightforward routing
--   Real-time Metrics Dashboard
--   Auto-generated swagger documentation
--   Out-of-the-box JSON serialization & deserialization (customizable)
--   Type definition support for path parameters
--   Request Extractors
--   Multiple Instance Support
--   Multithreading support
--   Websockets, Streaming, and Server-Sent Events
--   Cron Scheduling (on endpoints & functions)
--   Middleware chaining (at the application, router, and route levels)
--   Static & Dynamic file hosting
--   Templating Support
--   Plotting Support
--   Protocol Buffer Support
--   Route tagging
--   Repeat tasks
+- Straightforward routing
+- Real-time Metrics Dashboard
+- Auto-generated swagger documentation
+- Out-of-the-box JSON serialization & deserialization (customizable)
+- Type definition support for path parameters
+- Request Extractors
+- Multiple Instance Support
+- Multithreading support
+- Websockets, Streaming, and Server-Sent Events
+- Cron Scheduling (on endpoints & functions)
+- Middleware chaining (at the application, router, and route levels)
+- Static & Dynamic file hosting
+- Templating Support
+- Plotting Support
+- Protocol Buffer Support
+- Route tagging
+- Repeat tasks
 
 ## Installation
 
 ```julia
-pkg> add Kernel
+pkg> add Kitten
 ```
 
 ## Minimalistic Example
@@ -35,7 +35,7 @@ pkg> add Kernel
 Create a web-server with very few lines of code
 
 ```julia
-using Kernel
+using Kitten
 using HTTP
 
 @get "/greet" function(req::HTTP.Request)
@@ -51,20 +51,20 @@ serve()
 Handlers are used to connect your code to the server in a clean & straightforward way.
 They assign a url to a function and invoke the function when an incoming request matches that url.
 
--   Handlers can be imported from other modules and distributed across multiple files for better organization and modularity
--   All handlers have equivalent macro & function implementations and support `do..end` block syntax
--   The type of first argument is used to identify what kind of handler is being registered
--   This package assumes it's a `Request` handler by default when no type information is provided
+- Handlers can be imported from other modules and distributed across multiple files for better organization and modularity
+- All handlers have equivalent macro & function implementations and support `do..end` block syntax
+- The type of first argument is used to identify what kind of handler is being registered
+- This package assumes it's a `Request` handler by default when no type information is provided
 
 There are 3 types of supported handlers:
 
--   `Request` Handlers
--   `Stream` Handlers
--   `Websocket` Handlers
+- `Request` Handlers
+- `Stream` Handlers
+- `Websocket` Handlers
 
 ```julia
 using HTTP
-using Kernel
+using Kitten
 
 # Request Handler
 @get "/" function(req::HTTP.Request)
@@ -111,29 +111,30 @@ end
 
 <details>
     <summary><b>More Handler Docs</b></summary>
-    
+
 ### Request Handlers
+
 Request handlers are used to handle HTTP requests. They are defined using macros or their function equivalents, and accept a `HTTP.Request` object as the first argument. These handlers support both function and do-block syntax.
 
--   The default Handler when no type information is provided
--   Routing Macros: `@get`, `@post`, `@put`, `@patch`, `@delete`, `@route`
--   Routing Functions: `get()`, `post()`, `put()`, `patch()`, `delete()`, `route()`
+- The default Handler when no type information is provided
+- Routing Macros: `@get`, `@post`, `@put`, `@patch`, `@delete`, `@route`
+- Routing Functions: `get()`, `post()`, `put()`, `patch()`, `delete()`, `route()`
 
 ### Stream Handlers
 
 Stream handlers are used to stream data. They are defined using the `@stream` macro or the `stream()` function and accept a `HTTP.Stream` object as the first argument. These handlers support both function and do-block syntax.
 
--   `@stream` and `stream()` don't require a type definition on the first argument, they assume it's a stream.
--   `Stream` handlers can be assigned with standard routing macros & functions: `@get`, `@post`, etc
--   You need to explicitly include the type definition so Kernel can identify this as a `Stream` handler
+- `@stream` and `stream()` don't require a type definition on the first argument, they assume it's a stream.
+- `Stream` handlers can be assigned with standard routing macros & functions: `@get`, `@post`, etc
+- You need to explicitly include the type definition so Kitten can identify this as a `Stream` handler
 
 ### Websocket Handlers
 
 Websocket handlers are used to handle websocket connections. They are defined using the `@websocket` macro or the `websocket()` function and accept a `HTTP.WebSocket` object as the first argument. These handlers support both function and do-block syntax.
 
--   `@websocket` and `websocket()` don't require a type definition on the first argument, they assume it's a websocket.
--   `Websocket` handlers can also be assigned with the `@get` macro or `get()` function, because the websocket protocol requires a `GET` request to initiate the handshake.
--   You need to explicitly include the type definition so Kernel can identify this as a `Websocket` handler
+- `@websocket` and `websocket()` don't require a type definition on the first argument, they assume it's a websocket.
+- `Websocket` handlers can also be assigned with the `@get` macro or `get()` function, because the websocket protocol requires a `GET` request to initiate the handshake.
+- You need to explicitly include the type definition so Kitten can identify this as a `Websocket` handler
 
 </details>
 
@@ -169,7 +170,7 @@ end
 
 ## Render Functions
 
-Kernel, by default, automatically identifies the Content-Type of the return value from a request handler when building a Response.
+Kitten, by default, automatically identifies the Content-Type of the return value from a request handler when building a Response.
 This default functionality is quite useful, but it does have an impact on performance. In situations where the return type is known,
 It's recommended to use one of the pre-existing render functions to speed things up.
 
@@ -179,7 +180,7 @@ Here's a list of the currently supported render functions:
 Below is an example of how to use these functions:
 
 ```julia
-using Kernel
+using Kitten
 
 get("/html") do
     html("<h1>Hello World</h1>")
@@ -198,15 +199,15 @@ serve()
 
 In most cases, these functions accept plain strings as inputs. The only exceptions are the `binary` function, which accepts a `Vector{UInt8}`, and the `json` function which accepts any serializable type.
 
--   Each render function accepts a status and custom headers.
--   The Content-Type and Content-Length headers are automatically set by these render functions
+- Each render function accepts a status and custom headers.
+- The Content-Type and Content-Length headers are automatically set by these render functions
 
 ## Path parameters
 
 Path parameters are declared with braces and are passed directly to your request handler.
 
 ```julia
-using Kernel
+using Kitten
 
 # use path params without type definitions (defaults to Strings)
 @get "/add/{a}/{b}" function(req, a, b)
@@ -231,7 +232,7 @@ serve()
 
 Query parameters can be declared directly inside of your handlers signature. Any parameter that isn't mentioned inside the route path is assumed to be a query parameter.
 
--   If a default value is not provided, it's assumed to be a required parameter
+- If a default value is not provided, it's assumed to be a required parameter
 
 ```julia
 @get "/query" function(req::HTTP.Request, a::Int, message::String="hello world")
@@ -252,7 +253,7 @@ end
 Use the `formdata()` function to extract and parse the form data from the body of a request. This function returns a dictionary of key-value pairs from the form
 
 ```julia
-using Kernel
+using Kitten
 
 # Setup a basic form
 @get "/" function()
@@ -281,7 +282,7 @@ serve()
 All objects are automatically deserialized into JSON using the JSON3 library
 
 ```julia
-using Kernel
+using Kitten
 using HTTP
 
 @get "/data" function(req::HTTP.Request)
@@ -294,10 +295,10 @@ serve()
 
 ## Deserialize & Serialize custom structs
 
-Kernel provides some out-of-the-box serialization & deserialization for most objects but requires the use of StructTypes when converting structs
+Kitten provides some out-of-the-box serialization & deserialization for most objects but requires the use of StructTypes when converting structs
 
 ```julia
-using Kernel
+using Kitten
 using HTTP
 using StructTypes
 
@@ -328,24 +329,24 @@ serve()
 
 ## Extractors
 
-Kernel comes with several built-in extractors designed to reduce the amount of boilerplate required to serialize inputs to your handler functions. By simply defining a struct and specifying the data source, these extractors streamline the process of data ingestion & validation through a uniform api.
+Kitten comes with several built-in extractors designed to reduce the amount of boilerplate required to serialize inputs to your handler functions. By simply defining a struct and specifying the data source, these extractors streamline the process of data ingestion & validation through a uniform api.
 
--   The serialized data is accessible through the `payload` property
--   Can be used alongside other parameters and extractors
--   Default values can be assigned when defined with the `@kwdef` macro
--   Includes both global and local validators
--   Struct definitions can be deeply nested
+- The serialized data is accessible through the `payload` property
+- Can be used alongside other parameters and extractors
+- Default values can be assigned when defined with the `@kwdef` macro
+- Includes both global and local validators
+- Struct definitions can be deeply nested
 
 Supported Extractors:
 
--   `Path` - extracts from path parameters
--   `Query` - extracts from query parameters,
--   `Header` - extracts from request headers
--   `Form` - extracts form data from the request body
--   `Body` - serializes the entire request body to a given type (String, Float64, etc..)
--   `ProtoBuffer` - extracts the `ProtoBuf` message from the request body (available through a package extension)
--   `Json` - extracts json from the request body
--   `JsonFragment` - extracts a "fragment" of the json body using the parameter name to identify and extract the corresponding top-level key
+- `Path` - extracts from path parameters
+- `Query` - extracts from query parameters,
+- `Header` - extracts from request headers
+- `Form` - extracts form data from the request body
+- `Body` - serializes the entire request body to a given type (String, Float64, etc..)
+- `ProtoBuffer` - extracts the `ProtoBuf` message from the request body (available through a package extension)
+- `Json` - extracts json from the request body
+- `JsonFragment` - extracts a "fragment" of the json body using the parameter name to identify and extract the corresponding top-level key
 
 #### Using Extractors & Parameters
 
@@ -382,11 +383,11 @@ end
 
 On top of serializing incoming data, you can also define your own validation rules by using the `validate` function. In the example below we show how to use both `global` and `local` validators in your code.
 
--   Validators are completely optional
--   During the validation phase, Kernel will call the `global` validator before running a `local` validator.
+- Validators are completely optional
+- During the validation phase, Kitten will call the `global` validator before running a `local` validator.
 
 ```julia
-import Kernel: validate
+import Kitten: validate
 
 struct Person
     name::String
@@ -415,7 +416,7 @@ You can interpolate variables directly into the paths, which makes dynamically r
 (Thanks to @anandijain for the idea)
 
 ```julia
-using Kernel
+using Kitten
 
 operations = Dict("add" => +, "multiply" => *)
 for (pathname, operator) in operations
@@ -438,13 +439,13 @@ Below are the arguments the `router()` function can take:
 router(prefix::String; tags::Vector, middleware::Vector, interval::Real, cron::String)
 ```
 
--   `tags` - are used to organize endpoints in the autogenerated docs
--   `middleware` - is used to setup router & route-specific middleware
--   `interval` - is used to support repeat actions (_calling a request handler on a set interval in seconds_)
--   `cron` - is used to specify a cron expression that determines when to call the request handler.
+- `tags` - are used to organize endpoints in the autogenerated docs
+- `middleware` - is used to setup router & route-specific middleware
+- `interval` - is used to support repeat actions (_calling a request handler on a set interval in seconds_)
+- `cron` - is used to specify a cron expression that determines when to call the request handler.
 
 ```julia
-using Kernel
+using Kitten
 
 # Any routes that use this router will be automatically grouped
 # under the 'math' tag in the autogenerated documenation
@@ -464,11 +465,11 @@ serve()
 
 ## Cron Scheduling
 
-Kernel comes with a built-in cron scheduling system that allows you to call endpoints and functions automatically when the cron expression matches the current time.
+Kitten comes with a built-in cron scheduling system that allows you to call endpoints and functions automatically when the cron expression matches the current time.
 
 When a job is scheduled, a new task is created and runs in the background. Each task uses its given cron expression and the current time to determine how long it needs to sleep before it can execute.
 
-The cron parser in Kernel is based on the same specifications as the one used in Spring. You can find more information about this on the [Spring Cron Expressions](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html) page.
+The cron parser in Kitten is based on the same specifications as the one used in Spring. You can find more information about this on the [Spring Cron Expressions](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html) page.
 
 ### Cron Expression Syntax
 
@@ -540,7 +541,7 @@ end
 
 When you run `serve()` or `serveparallel()`, all registered cron jobs are automatically started. If the server is stopped or killed, all running jobs will also be terminated. You can stop the server and all repeat tasks and cron jobs by calling the `terminate()` function or manually killing the server with `ctrl+C`.
 
-In addition, Kernel provides utility functions to manually start and stop cron jobs: `startcronjobs()` and `stopcronjobs()`. These functions can be used outside of a web server as well.
+In addition, Kitten provides utility functions to manually start and stop cron jobs: `startcronjobs()` and `stopcronjobs()`. These functions can be used outside of a web server as well.
 
 ## Repeat Tasks
 
@@ -548,8 +549,8 @@ Repeat tasks provide a simple api to run a function on a set interval.
 
 There are two ways to register repeat tasks:
 
--   Through the `interval` parameter in a `router()`
--   Using the `@repeat` macro
+- Through the `interval` parameter in a `router()`
+- Using the `@repeat` macro
 
 **It's important to note that request handlers that use this property can't define additional function parameters outside of the default `HTTP.Request` parameter.**
 
@@ -559,7 +560,7 @@ The `router()` function has an `interval` parameter which is used to call
 a request handler on a set interval (in seconds).
 
 ```julia
-using Kernel
+using Kitten
 
 taskrouter = router("/repeat", interval=0.5, tags=["repeat"])
 
@@ -592,19 +593,19 @@ When the server is ran, all tasks are started automatically. But the module also
 
 ## Multiple Instances
 
-In some advanced scenarios, you might need to spin up multiple web severs within the same module on different ports. Kernel provides both a static and dynamic way to create multiple instances of a web server.
+In some advanced scenarios, you might need to spin up multiple web severs within the same module on different ports. Kitten provides both a static and dynamic way to create multiple instances of a web server.
 
 As a general rule of thumb, if you know how many instances you need ahead of time it's best to go with the static approach.
 
 ### Static: multiple instance's with `@oxidise`
 
-Kernel provides a new macro which makes it possible to setup and run multiple instances. It generates methods and binds them to a new internal state for the current module.
+Kitten provides a new macro which makes it possible to setup and run multiple instances. It generates methods and binds them to a new internal state for the current module.
 
-In the example below, two simple servers are defined within modules A and B and are started in the parent module. Both modules contain all of the functions exported from Kernel which can be called directly as shown below.
+In the example below, two simple servers are defined within modules A and B and are started in the parent module. Both modules contain all of the functions exported from Kitten which can be called directly as shown below.
 
 ```julia
 module A
-    using Kernel; @oxidise
+    using Kitten; @oxidise
 
     get("/") do
         text("server A")
@@ -612,7 +613,7 @@ module A
 end
 
 module B
-    using Kernel; @oxidise
+    using Kitten; @oxidise
 
     get("/") do
         text("server B")
@@ -632,12 +633,12 @@ end
 
 ### Dynamic: multiple instance's with `instance()`
 
-The `instance` function helps you create a completely independent instance of an Kernel web server at runtime. It works by dynamically creating a julia module at runtime and loading the Kernel code within it.
+The `instance` function helps you create a completely independent instance of an Kitten web server at runtime. It works by dynamically creating a julia module at runtime and loading the Kitten code within it.
 
-All of the same methods from Kernel are available under the named instance. In the example below we can use the `get`, and `serve` by simply using dot syntax on the `app1` variable to access the underlying methods.
+All of the same methods from Kitten are available under the named instance. In the example below we can use the `get`, and `serve` by simply using dot syntax on the `app1` variable to access the underlying methods.
 
 ```julia
-using Kernel
+using Kitten
 
 ######### Setup the first app #########
 
@@ -670,7 +671,7 @@ end
 
 ## Multithreading & Parallelism
 
-For scenarios where you need to handle higher amounts of traffic, you can run Kernel in a
+For scenarios where you need to handle higher amounts of traffic, you can run Kitten in a
 multithreaded mode. In order to utilize this mode, julia must have more than 1 thread to work with. You can start a julia session with 4 threads using the command below
 
 ```shell
@@ -680,7 +681,7 @@ julia --threads 4
 `serveparallel()` Starts the webserver in streaming mode and handles requests in a cooperative multitasking approach. This function uses `Threads.@spawn` to schedule a new task on any available thread. Meanwhile, @async is used inside this task when calling each request handler. This allows the task to yield during I/O operations.
 
 ```julia
-using Kernel
+using Kitten
 using StructTypes
 using Base.Threads
 
@@ -704,18 +705,18 @@ serveparallel()
 
 ## Protocol Buffers
 
-Kernel includes an extension for the [ProtoBuf.jl](https://github.com/JuliaIO/ProtoBuf.jl) package. This extension provides a `protobuf()` function, simplifying the process of working with Protocol Buffers in the context of web server. For a better understanding of this package, please refer to its official documentation.
+Kitten includes an extension for the [ProtoBuf.jl](https://github.com/JuliaIO/ProtoBuf.jl) package. This extension provides a `protobuf()` function, simplifying the process of working with Protocol Buffers in the context of web server. For a better understanding of this package, please refer to its official documentation.
 
 This function has overloads for the following scenarios:
 
--   Decoding a protobuf message from the body of an HTTP request.
--   Encoding a protobuf message into the body of an HTTP request.
--   Encoding a protobuf message into the body of an HTTP response.
+- Decoding a protobuf message from the body of an HTTP request.
+- Encoding a protobuf message into the body of an HTTP request.
+- Encoding a protobuf message into the body of an HTTP response.
 
 ```julia
 using HTTP
 using ProtoBuf
-using Kernel
+using Kitten
 
 # The generated classes need to be created ahead of time (check the protobufs)
 include("people_pb.jl");
@@ -756,19 +757,19 @@ message People {
 
 ## Plotting
 
-Kernel is equipped with several package extensions that enhance its plotting capabilities. These extensions make it easy to return plots directly from request handlers. All operations are performed in-memory using an IOBuffer and return a `HTTP.Response`
+Kitten is equipped with several package extensions that enhance its plotting capabilities. These extensions make it easy to return plots directly from request handlers. All operations are performed in-memory using an IOBuffer and return a `HTTP.Response`
 
 Supported Packages and their helper utils:
 
--   CairoMakie.jl: `png`, `svg`, `pdf`, `html`
--   WGLMakie.jl: `html`
--   Bonito.jl: `html`
+- CairoMakie.jl: `png`, `svg`, `pdf`, `html`
+- WGLMakie.jl: `html`
+- Bonito.jl: `html`
 
 #### CairoMakie.jl
 
 ```julia
 using CairoMakie: heatmap
-using Kernel
+using Kitten
 
 @get "/cairo" function()
     fig, ax, pl = heatmap(rand(50, 50))
@@ -783,8 +784,8 @@ serve()
 ```julia
 using Bonito
 using WGLMakie: heatmap
-using Kernel
-using Kernel: html # Bonito also exports html
+using Kitten
+using Kitten: html # Bonito also exports html
 
 @get "/wgl" function()
     fig = heatmap(rand(50, 50))
@@ -799,8 +800,8 @@ serve()
 ```julia
 using Bonito
 using WGLMakie: heatmap
-using Kernel
-using Kernel: html # Bonito also exports html
+using Kitten
+using Kitten: html # Bonito also exports html
 
 @get "/bonito" function()
     app = App() do
@@ -817,10 +818,10 @@ serve()
 
 ## Templating
 
-Rather than building an internal engine for templating or adding additional dependencies, Kernel
+Rather than building an internal engine for templating or adding additional dependencies, Kitten
 provides two package extensions to support `Mustache.jl` and `OteraEngine.jl` templates.
 
-Kernel provides a simple wrapper api around both packages that makes it easy to render templates from strings,
+Kitten provides a simple wrapper api around both packages that makes it easy to render templates from strings,
 templates, and files. This wrapper api returns a `render` function which accepts a dictionary of inputs to fill out the
 template.
 
@@ -836,7 +837,7 @@ Example 1: Rendering a Mustache Template from a File
 
 ```julia
 using Mustache
-using Kernel
+using Kitten
 
 # Load the Mustache template from a file and create a render function
 render = mustache("./templates/greeting.txt", from_file=false)
@@ -851,7 +852,7 @@ Example 2: Specifying MIME Type for a plain string Mustache Template
 
 ```julia
 using Mustache
-using Kernel
+using Kitten
 
 # Define a Mustache template (both plain strings and mustache templates are supported)
 template_str = "Hello, {{name}}!"
@@ -873,7 +874,7 @@ Example 1: Rendering an Otera Template with Logic and Loops
 
 ```julia
 using OteraEngine
-using Kernel
+using Kitten
 
 # Define an Otera template
 template_str = """
@@ -902,7 +903,7 @@ Example 2: Running Julia Code in Otera Template
 
 ```julia
 using OteraEngine
-using Kernel
+using Kitten
 
 # Define an Otera template with embedded Julia code
 template_str = """
@@ -927,7 +928,7 @@ You can mount static files using this handy function which recursively searches 
 loaded into memory on startup.
 
 ```julia
-using Kernel
+using Kitten
 
 # mount all files inside the "content" folder under the "/static" path
 staticfiles("content", "static")
@@ -941,7 +942,7 @@ serve()
 Similar to staticfiles, this function mounts each path and re-reads the file for each request. This means that any changes to the files after the server has started will be displayed.
 
 ```julia
-using Kernel
+using Kitten
 
 # mount all files inside the "content" folder under the "/dynamic" path
 dynamicfiles("content", "dynamic")
@@ -963,7 +964,7 @@ serveparallel(access_log=nothing)
 
 ## Logging
 
-Kernel provides a default logging format but allows you to customize the format using the `access_log` parameter. This functionality is available in both the `serve()` and `serveparallel()` functions.
+Kitten provides a default logging format but allows you to customize the format using the `access_log` parameter. This functionality is available in both the `serve()` and `serveparallel()` functions.
 
 You can read more about the logging options [here](https://juliaweb.github.io/HTTP.jl/stable/reference/#HTTP.@logfmt_str)
 
@@ -994,7 +995,7 @@ application -> router -> route
 Now lets see some middleware in action:
 
 ```julia
-using Kernel
+using Kitten
 using HTTP
 
 const CORS_HEADERS = [
@@ -1056,12 +1057,12 @@ serve(middleware=[CorsMiddleware, AuthMiddleware])
 
 ## Custom Response Serializers
 
-If you don't want to use Kernel's default response serializer, you can turn it off and add your own! Just create your own special middleware function to serialize the response and add it at the end of your own middleware chain.
+If you don't want to use Kitten's default response serializer, you can turn it off and add your own! Just create your own special middleware function to serialize the response and add it at the end of your own middleware chain.
 
 Both `serve()` and `serveparallel()` have a `serialize` keyword argument which can toggle off the default serializer.
 
 ```julia
-using Kernel
+using Kitten
 using HTTP
 using JSON3
 
@@ -1101,7 +1102,7 @@ functions to directly modify the schema yourself or merge the generated schema f
 Below is an example of how to merge the schema generated from the `SwaggerMarkdown.jl` package.
 
 ```julia
-using Kernel
+using Kitten
 using SwaggerMarkdown
 
 # Here's an example of how you can merge autogenerated docs from SwaggerMarkdown.jl into your api
@@ -1139,7 +1140,7 @@ serve()
 Below is an example of how to manually modify the schema
 
 ```julia
-using Kernel
+using Kitten
 using SwaggerMarkdown
 
 # Only the basic information is parsed from this route when generating docs

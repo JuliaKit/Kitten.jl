@@ -6,14 +6,14 @@ using HTTP
 using Suppressor
 using ProtoBuf
 using ..Constants
-using Oxygen; @oxidise
-using Oxygen: extract, Param, LazyRequest, Extractor
+using Kitten; @oxidise
+using Kitten: extract, Param, LazyRequest, Extractor
 
 # extend the built-in validate function
-import Oxygen: validate
+import Kitten: validate
 
 include("extensions/protobuf/messages/test_pb.jl")
-using .test_pb: MyMessage 
+using .test_pb: MyMessage
 
 
 
@@ -30,7 +30,7 @@ end
 # Add a lower bound to age with a global validator
 validate(p::Person) = p.age >= 0
 
-@testset "Extactor builder sytnax" begin 
+@testset "Extactor builder sytnax" begin
 
     @test Json{Person}(x -> x.age >= 25) isa Extractor
 
@@ -43,7 +43,7 @@ validate(p::Person) = p.age >= 0
     @test Json(p, x -> x.age >= 25) isa Extractor
 end
 
-@testset "JSON extract" begin 
+@testset "JSON extract" begin
     req = HTTP.Request("GET", "/", [], """{"name": "joe", "age": 25}""")
     param = Param(:person, Json{Person}, missing, false)
     p = extract(param, LazyRequest(request=req)).payload
@@ -51,7 +51,7 @@ end
     @test p.age == 25
 end
 
-@testset "kwarg_struct_builder Nested test" begin 
+@testset "kwarg_struct_builder Nested test" begin
     req = HTTP.Request("GET", "/", [], """
     {
         "address": "123 main street",
@@ -70,7 +70,7 @@ end
     @test p.owner.age == 25
 end
 
-@testset "Partial JSON extract" begin 
+@testset "Partial JSON extract" begin
     req = HTTP.Request("GET", "/", [], """{ "person": {"name": "joe", "age": 25} }""")
     param = Param(:person, JsonFragment{Person}, missing, false)
     p = extract(param, LazyRequest(request=req)).payload
@@ -79,7 +79,7 @@ end
 end
 
 
-@testset "Form extract" begin 
+@testset "Form extract" begin
     req = HTTP.Request("GET", "/", [], """name=joe&age=25""")
     param = Param(:form, Form{Person}, missing, false)
     p = extract(param, LazyRequest(request=req)).payload
@@ -101,7 +101,7 @@ end
 end
 
 
-@testset "Path extract" begin 
+@testset "Path extract" begin
     req = HTTP.Request("GET", "/person/john/20", [])
     req.context[:params] = Dict("name" => "john", "age" => "20") # simulate path params
 
@@ -112,7 +112,7 @@ end
 end
 
 
-@testset "Query extract" begin 
+@testset "Query extract" begin
     req = HTTP.Request("GET", "/person?name=joe&age=30", [])
     param = Param(:query, Query{Person}, missing, false)
     p = extract(param, LazyRequest(request=req)).payload
@@ -128,7 +128,7 @@ end
     @test p.age == 30
 end
 
-@testset "Header extract" begin 
+@testset "Header extract" begin
     req = HTTP.Request("GET", "/person", ["name" => "joe", "age" => "19"])
     param = Param(:header, Header{Person}, missing, false)
     p = extract(param, LazyRequest(request=req)).payload
@@ -137,7 +137,7 @@ end
 end
 
 
-@testset "Body extract" begin 
+@testset "Body extract" begin
 
     # Parse Float64 from body
     req = HTTP.Request("GET", "/", [], "3.14")
@@ -168,9 +168,9 @@ struct Parameters
     b::Int
 end
 
-@testset "Api tests" begin 
+@testset "Api tests" begin
 
-    get("/") do 
+    get("/") do
         text("home")
     end
 
@@ -197,7 +197,7 @@ end
     @post "/json" function(req, data = Json{PersonWithDefault}(s -> s.value < 10))
         return data.payload
     end
- 
+
     post("/protobuf") do req, data::ProtoBuffer{MyMessage}
         return  protobuf(data.payload)
     end
@@ -229,7 +229,7 @@ end
     data = json(r)
     @test data["limit"] == 10
     @test data["skip"] == 25
-    
+
     r = internalrequest(HTTP.Request("POST", "/body/string", [], """Hello World!"""))
     @test r.status == 200
     @test text(r) == "Hello World!"
@@ -238,7 +238,7 @@ end
     @test r.status == 200
     @test parse(Float64, text(r)) == 3.14
 
-    @suppress_err begin 
+    @suppress_err begin
         # should fail since we are missing query params
         r = internalrequest(HTTP.Request("GET", "/path/add/3/7"))
         @test r.status == 500
@@ -250,13 +250,13 @@ end
     @test data["limit"] == 10
     @test data["skip"] == 33
 
-    @suppress_err begin 
+    @suppress_err begin
         # should fail since we are missing query params
         r = internalrequest(HTTP.Request("GET", "/headers", ["limit" => "3"], ""))
         @test r.status == 500
     end
 
-    @suppress_err begin 
+    @suppress_err begin
         # value is higher than the limit set in the validator
         r = internalrequest(HTTP.Request("POST", "/json", [], """
         {

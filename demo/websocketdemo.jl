@@ -2,7 +2,7 @@ module WebSocketDemo
 using Dates
 using HTTP
 using HTTP.WebSockets: send
-using Oxygen
+using Kitten
 
 @get "/" function()
     html("""

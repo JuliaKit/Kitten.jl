@@ -3,7 +3,7 @@ using Test
 using Dates
 using HTTP
 using ..Constants
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 @get "/health" function()
     return text("I'm alive")
@@ -28,7 +28,7 @@ end
 serve(port=PORT, host=HOST, async=true, show_errors=false, show_banner=false, access_log=nothing)
 
 
-@testset "Stream Function tests" begin 
+@testset "Stream Function tests" begin
 
     HTTP.open("GET", "$localhost/events/john", headers=Dict("Connection" => "close")) do io
         while !eof(io)

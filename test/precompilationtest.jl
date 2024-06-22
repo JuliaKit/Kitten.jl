@@ -2,7 +2,7 @@ module PrecompilationTests
 
 using Test
 using HTTP
-using Oxygen: text 
+using Kitten: text
 using ..Constants
 
 # Load in the custom pacakge & trigger any precompilation

@@ -2,14 +2,14 @@ module WGLMakieDemo
 using WGLMakie
 using WGLMakie.Makie: FigureLike
 using Bonito, FileIO, Colors, HTTP
-using Oxygen
-using Oxygen: text, html
+using Kitten
+using Kitten: text, html
 
-get("/") do 
+get("/") do
     text("home")
 end
 
-get("/plot") do 
+get("/plot") do
     plt = heatmap(rand(50, 50))
     html(plt)
 end
@@ -17,7 +17,7 @@ end
 get("/html/heatmap") do
     app = App() do session::Session
         return DOM.div(
-            DOM.h1("Random 50x50 Heatmap"), 
+            DOM.h1("Random 50x50 Heatmap"),
             DOM.div(heatmap(rand(50, 50)))
         )
     end

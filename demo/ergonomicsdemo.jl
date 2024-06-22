@@ -1,6 +1,6 @@
 module ErgonomicsDemo
 
-using Oxygen
+using Kitten
 using StructTypes
 using Dates
 using HTTP
@@ -15,7 +15,7 @@ struct Address
     zip::String
 end
 
-struct Person 
+struct Person
     name::String
     age::Int
 end

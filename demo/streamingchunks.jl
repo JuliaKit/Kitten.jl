@@ -4,7 +4,7 @@ using JSON3
 using Dates
 using HTTP
 using JSON3
-using Oxygen
+using Kitten
 
 function chunks(data::Any, nchunks::Int)
     return chunks(JSON3.write(data), nchunks)
@@ -13,7 +13,7 @@ end
 function chunks(data::String, nchunks::Int)
     # Convert the data to binary
     binarydata = Vector{UInt8}(data)
-    data_size = sizeof(binarydata) 
+    data_size = sizeof(binarydata)
 
     # Calculate chunk size
     chunk_size = ceil(Int, data_size / nchunks)
@@ -36,7 +36,7 @@ end
     # Set headers
     HTTP.setheader(stream, "Content-Type" => "application/json")
     HTTP.setheader(stream, "Transfer-Encoding" => "chunked")
-       
+
     # Start writing (if you need to send headers before the body)
     startwrite(stream)
 

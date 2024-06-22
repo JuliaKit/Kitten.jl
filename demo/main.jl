@@ -1,5 +1,5 @@
-module Main 
-using Oxygen
+module Main
+using Kitten
 using HTTP
 using JSON3
 using StructTypes
@@ -22,7 +22,7 @@ end
 end
 
 # add a default handler for unmatched requests
-@get "*" function () 
+@get "*" function ()
     return "looks like you hit an endpoint that doesn't exist"
 end
 
@@ -49,7 +49,7 @@ end
     return text(req)
 end
 
-# demonstrates how to serialize JSON into a julia struct 
+# demonstrates how to serialize JSON into a julia struct
 @post "/animal" function (req)
     return json(req, Animal)
 end
@@ -81,7 +81,7 @@ end
     return html("""
         <!DOCTYPE html>
             <html>
-            <body> 
+            <body>
                 <h1>$message</h1>
             </body>
         </html>
@@ -92,7 +92,7 @@ end
     return Animal(1, "cat", "whiskers")
 end
 
-# recursively mount all files inside the demo folder ex.) demo/main.jl => /static/demo/main.jl 
+# recursively mount all files inside the demo folder ex.) demo/main.jl => /static/demo/main.jl
 staticfiles("content")
 dynamicfiles("content", "dynamic")
 
@@ -108,7 +108,7 @@ function CorsHandler(handle)
         # return headers on OPTIONS request
         if HTTP.method(req) == "OPTIONS"
             return HTTP.Response(200, headers)
-        else 
+        else
             return handle(req)
         end
     end
@@ -118,4 +118,3 @@ end
 serve(middleware=[CorsHandler])
 
 end
-

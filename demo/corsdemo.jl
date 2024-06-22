@@ -1,6 +1,6 @@
 module CorsDemo
 
-using Oxygen
+using Kitten
 using HTTP
 
 allowed_origins = [ "Access-Control-Allow-Origin" => "*" ]

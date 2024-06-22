@@ -1,14 +1,14 @@
 module RepeatTasksDemo
 
-using Oxygen
+using Kitten
 
 const iterations = Ref{Int}(0)
 
-get(router("/one", interval=1)) do 
+get(router("/one", interval=1)) do
     iterations[] += 1
 end
 
-get(router("/two", interval=2)) do 
+get(router("/two", interval=2)) do
     iterations[] += 1
 end
 

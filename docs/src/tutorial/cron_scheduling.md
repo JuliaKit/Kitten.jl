@@ -1,13 +1,15 @@
-# Cron Scheduling 
+# Cron Scheduling
 
-Oxygen comes with a built-in cron scheduling system that allows you to call endpoints and functions automatically when the cron expression matches the current time.
+Kitten comes with a built-in cron scheduling system that allows you to call endpoints and functions automatically when the cron expression matches the current time.
 
 When a job is scheduled, a new task is created and runs in the background. Each task uses its given cron expression and the current time to determine how long it needs to sleep before it can execute.
 
-The cron parser in Oxygen is based on the same specifications as the one used in Spring. You can find more information about this on the [Spring Cron Expressions](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html) page.
+The cron parser in Kitten is based on the same specifications as the one used in Spring. You can find more information about this on the [Spring Cron Expressions](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/scheduling/support/CronExpression.html) page.
 
 ## Cron Expression Syntax
+
 The following is a breakdown of what each parameter in our cron expression represents. While our specification closely resembles the one defined by Spring, it's not an exact 1-to-1 match.
+
 ```
 The string has six single space-separated time and date fields:
 
@@ -21,10 +23,11 @@ The string has six single space-separated time and date fields:
  │ │ │ │ │ │
  * * * * * *
 ```
-Partial expressions are also supported, which means that subsequent expressions can be left out (they are defaulted to `'*'`). 
+
+Partial expressions are also supported, which means that subsequent expressions can be left out (they are defaulted to `'*'`).
 
 ```julia
-# In this example we see only the `seconds` part of the expression is defined. 
+# In this example we see only the `seconds` part of the expression is defined.
 # This means that all following expressions are automatically defaulted to '*' expressions
 @cron "*/2" function()
     println("runs every 2 seconds")
@@ -73,4 +76,4 @@ end
 
 When you run `serve()` or `serveparallel()`, all registered cron jobs are automatically started. If the server is stopped or killed, all running jobs will also be terminated. You can stop the server and all repeat tasks and cron jobs by calling the `terminate()` function or manually killing the server with `ctrl+C`.
 
-In addition, Oxygen provides utility functions to manually start and stop cron jobs: `startcronjobs()` and `stopcronjobs()`. These functions can be used outside of a web server as well.
+In addition, Kitten provides utility functions to manually start and stop cron jobs: `startcronjobs()` and `stopcronjobs()`. These functions can be used outside of a web server as well.

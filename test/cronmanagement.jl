@@ -1,11 +1,11 @@
 module CronManagementTests
 
 using Test
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 const iterations = Ref{Int}(0)
 
-get(router("/three", cron="*/3")) do 
+get(router("/three", cron="*/3")) do
     iterations[] += 1
 end
 

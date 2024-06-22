@@ -1,6 +1,6 @@
-module MiddlewareDemo 
+module MiddlewareDemo
 
-using Oxygen
+using Kitten
 using HTTP
 using JSON3
 
@@ -38,14 +38,14 @@ end
 
 Middleware rules
 
-All middleware is additive, any middleware defined at the application, router, our route level will get combined 
+All middleware is additive, any middleware defined at the application, router, our route level will get combined
 and get executed.
 
 Regardless if set or not, Middleware will always get executed in the following order:
 
-    application -> router -> route 
+    application -> router -> route
 
-Well, what if we don't want previous layers of middleware to run? 
+Well, what if we don't want previous layers of middleware to run?
 You set middleware=[], it clears all middleware at that layer and skips all layers that come before it.
 
 For example, setting middleware=[] at the:

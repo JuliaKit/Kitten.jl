@@ -5,9 +5,9 @@ using HTTP
 using JSON3
 using StructTypes
 using Sockets
-using Dates 
+using Dates
 using Suppressor
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 using ..Constants
 
@@ -83,12 +83,12 @@ end
     return Book("mobdy dick", "blah")
 end
 
-try 
+try
     @get "/mismatched-params/{a}/{b}" function (a,c)
         return "$a, $c"
     end
 catch e
-    @test true 
+    @test true
 end
 
 @get "/add/{a}/{b}" function (req, a::Int32, b::Int64)
@@ -100,7 +100,7 @@ end
 end
 
 # path is missing function parameter
-try 
+try
     @get "/mismatched-params/{a}/{b}" function (req, a,b,c)
         return "$a, $b, $c"
     end
@@ -109,12 +109,12 @@ catch e
 end
 
 # request handler is missing a parameter
-try 
+try
     @get "/mismatched-params/{a}/{b}" function (req, a)
         return "$a, $b, $c"
     end
 catch e
-    @test true 
+    @test true
 end
 
 @get "/file" function(req)
@@ -122,69 +122,69 @@ end
 end
 
 @get "/multiply/{a}/{b}" function(req, a::Float64, b::Float64)
-    return a * b 
+    return a * b
 end
 
 @get "/person" function(req)
     return Person("joe", 20)
-end 
+end
 
 @get "/text" function(req)
     return text(req)
-end 
+end
 
 @get "/binary" function(req)
     return binary(req)
-end 
+end
 
 @get "/json" function(req)
     return json(req)
-end 
+end
 
 @get "/person-json" function(req)
     return json(req, Person)
-end 
+end
 
 @get "/html" function(req)
-    return html(""" 
+    return html("""
         <!DOCTYPE html>
             <html>
-            <body> 
+            <body>
                 <h1>hello world</h1>
             </body>
         </html>
     """)
-end 
+end
 
 @route ["GET"] "/get" function()
     return "get"
-end 
+end
 
 @get "/query" function(req)
     return queryparams(req)
-end 
+end
 
 @post "/post" function(req)
     return text(req)
-end 
+end
 
 @put "/put" function(req)
     return "put"
-end 
+end
 
 @patch "/patch" function(req)
     return "patch"
-end 
+end
 
 @delete "/delete" function(req)
     return "delete"
-end 
+end
 
 
 
 @enum Fruit apple=1 orange=2 kiwi=3
-struct Student 
-  name  :: String 
+struct Student
+  name  :: String
   age   :: Int8
 end
 
@@ -359,7 +359,7 @@ r = internalrequest(HTTP.Request("GET", "/html"))
 @test Dict(r.headers)["Content-Type"] == "text/html; charset=utf-8"
 
 
-# path param tests 
+# path param tests
 
 # boolean
 r = internalrequest(HTTP.Request("GET", "/boolean/true"))
@@ -413,14 +413,14 @@ r = internalrequest(HTTP.Request("GET", "/datetime/2022-01-01"))
 r = internalrequest(HTTP.Request("GET", "/complex/3.2e-1"))
 @test r.status == 200
 
-# list 
+# list
 r = internalrequest(HTTP.Request("GET", "/list/[1,2,3]"))
 @test r.status == 200
 
 r = internalrequest(HTTP.Request("GET", "/list/[]"))
 @test r.status == 200
 
-# dictionary 
+# dictionary
 r = internalrequest(HTTP.Request("GET", """/dict/{"msg": "hello world"}"""))
 @test r.status == 200
 @test json(r)["msg"] == "hello world"
@@ -428,7 +428,7 @@ r = internalrequest(HTTP.Request("GET", """/dict/{"msg": "hello world"}"""))
 r = internalrequest(HTTP.Request("GET", "/dict/{}"))
 @test r.status == 200
 
-# tuple 
+# tuple
 r = internalrequest(HTTP.Request("GET", """/tuple/["a","b"]"""))
 @test r.status == 200
 @test text(r) == """["a","b"]"""
@@ -437,7 +437,7 @@ r = internalrequest(HTTP.Request("GET", """/tuple/["a","b","c"]"""))
 @test r.status == 200
 @test text(r) == """["a","b"]"""
 
-# union 
+# union
 r = internalrequest(HTTP.Request("GET", "/union/true"))
 @test r.status == 200
 @test Dict(r.headers)["Content-Type"] == "text/plain; charset=utf-8"
@@ -450,7 +450,7 @@ r = internalrequest(HTTP.Request("GET", "/union/asdfasd"))
 @test r.status == 200
 @test Dict(r.headers)["Content-Type"] == "text/plain; charset=utf-8"
 
-# struct 
+# struct
 r = internalrequest(HTTP.Request("GET", """/struct/{"name": "jim", "age": 20}"""))
 @test r.status == 200
 @test json(r, Student) == Student("jim", 20)
@@ -461,14 +461,14 @@ r = internalrequest(HTTP.Request("GET", """/struct/{"name": "jim", "age": 20}"""
 @suppress global r = internalrequest(HTTP.Request("GET", """/struct/{"aged": 20}"""))
 @test r.status == 500
 
-# float 
+# float
 r = internalrequest(HTTP.Request("GET", "/float/3.5"))
 @test r.status == 200
 
 r = internalrequest(HTTP.Request("GET", "/float/3"))
 @test r.status == 200
 
-# GET, PUT, POST, PATCH, DELETE, route macro tests 
+# GET, PUT, POST, PATCH, DELETE, route macro tests
 
 r = internalrequest(HTTP.Request("GET", "/get"))
 @test r.status == 200
@@ -487,7 +487,7 @@ r = internalrequest(HTTP.Request("PATCH", "/patch"))
 @test text(r) == "patch"
 
 
-# # Query params tests 
+# # Query params tests
 
 r = internalrequest(HTTP.Request("GET", "/query?message=hello"))
 @test r.status == 200
@@ -590,26 +590,26 @@ r = internalrequest(HTTP.Request("GET", "/static/sample.html"))
 @test r.status == 500
 
 @suppress global r = internalrequest(HTTP.Request("GET", "/undefinederror"))
-@test r.status == 500    
+@test r.status == 500
 
 
-try 
+try
     # apparently you don't need to have StructTypes setup on a custom type with the latest JSON3 library
     r = internalrequest(HTTP.Request("GET", "/unsupported-struct"))
-catch e 
+catch e
     @test e isa ArgumentError
 end
 
-## docs related tests 
+## docs related tests
 
 # should be set to true by default
-@test isdocsenabled() == true 
+@test isdocsenabled() == true
 
 @test_throws "" disabledocs()
-#@test isdocsenabled() == false 
+#@test isdocsenabled() == false
 
 enabledocs()
-@test isdocsenabled() == true 
+@test isdocsenabled() == true
 
 terminate()
 #enabledocs()
@@ -747,7 +747,7 @@ mergeschema(Dict(
 
 @assert getschema()["paths"]["/multiply/{a}/{b}"]["get"]["description"] == "returns the result of a * b"
 
-mergeschema("/put", 
+mergeschema("/put",
     Dict(
         "put" => Dict(
             "description" => "returns a string on PUT",
@@ -779,10 +779,10 @@ terminate()
 
 function errorcatcher(handle)
     function(req)
-        try 
+        try
             response = handle(req)
             return response
-        catch e 
+        catch e
             return HTTP.Response(500, "here's a custom error response")
         end
     end
@@ -794,14 +794,14 @@ sleep(3)
 r = internalrequest(HTTP.Request("GET", "/get"), catch_errors=false)
 @test r.status == 200
 
-try 
+try
     # test the error handler inside the default handler
     r = HTTP.get("$localhost/undefinederror"; readtimeout=1)
 catch e
     @test true
 end
 
-try 
+try
     # service should not have started and get requests should throw some error
     r = HTTP.get("$localhost/data"; readtimeout=1)
 catch e
@@ -815,5 +815,4 @@ resetstate()
 clearcronjobs()
 cleartasks()
 
-end 
-
+end

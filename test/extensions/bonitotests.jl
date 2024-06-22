@@ -2,11 +2,12 @@ module CairoMakieTests
 using HTTP
 using Test
 using Bonito
-using Oxygen; @oxidise
-import Oxygen: text, html
+using Kitten
+@oxidise
+import Kitten: text, html
 using ..Constants
 
-@testset "Bonito Utils tests" begin 
+@testset "Bonito Utils tests" begin
 
     app = App() do
         return DOM.div(DOM.h1("hello world"), js"""console.log('hello world')""")
@@ -21,15 +22,15 @@ end
 
 @testset "WGLMakie server tests" begin
 
-    get("/") do 
+    get("/") do
         text("hello world")
     end
 
-    get("/html") do 
+    get("/html") do
         html("hello world")
     end
 
-    get("/plot/html") do 
+    get("/plot/html") do
         app = App() do
             return DOM.div(DOM.h1("hello world"))
         end

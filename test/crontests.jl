@@ -1,13 +1,13 @@
-module CronTests 
+module CronTests
 using Test
 using HTTP
 using JSON3
 using StructTypes
 using Sockets
-using Dates 
-using Oxygen
-using Oxygen.Cron: iscronmatch, isweekday, lastweekdayofmonth, 
-            next, sleep_until, lastweekday, nthweekdayofmonth, 
+using Dates
+using Kitten
+using Kitten.Cron: iscronmatch, isweekday, lastweekdayofmonth,
+            next, sleep_until, lastweekday, nthweekdayofmonth,
             matchexpression, translate
 
 using ..Constants
@@ -44,7 +44,7 @@ using ..Constants
     end
 
 
-    @testset "methods" begin 
+    @testset "methods" begin
         @test lastweekday(DateTime(2022,1,1,0,0,0)) == DateTime(2021,12,31,0,0,0)
 
         @test lastweekday(DateTime(2022,1,3,0,0,0)) != DateTime(2022,1,8,0,0,0)
@@ -74,7 +74,7 @@ using ..Constants
 
         # Test with n as a day in the middle of the month and the day is a weekend
         @test nthweekdayofmonth(DateTime(2022, 5, 15), 15) == DateTime(2022, 5, 16)
-        
+
         # Test with n as a day in the middle of the month and the day is a weekend
         @test nthweekdayofmonth(DateTime(2022, 6, 18), 18) == DateTime(2022, 6, 17)
 
@@ -251,9 +251,9 @@ using ..Constants
 
 
 
-        
-    @testset "seconds tests" begin 
-        # check exact second 
+
+    @testset "seconds tests" begin
+        # check exact second
         @test iscronmatch("5/*", DateTime(2022,1,1,1,0,5)) == true
         @test iscronmatch("7/*", DateTime(2022,1,1,1,0,7)) == true
 
@@ -400,7 +400,7 @@ using ..Constants
     end
 
 
-    @testset "6:00 AM and 7:00 PM every day" begin 
+    @testset "6:00 AM and 7:00 PM every day" begin
         for day in 1:20
             for hour in 0:23
                 @test iscronmatch("0 0 6,19 * * *", DateTime(2022,1,day,hour,0,0)) == (hour == 6 || hour == 19)
@@ -409,7 +409,7 @@ using ..Constants
     end
 
 
-    @testset "8:00, 8:30, 9:00, 9:30, 10:00 and 10:30 every day" begin 
+    @testset "8:00, 8:30, 9:00, 9:30, 10:00 and 10:30 every day" begin
         for day in 1:20
             for hour in 0:23
                 @test iscronmatch("0 0/30 8-10 * * *", DateTime(2022,1,day,hour,30,0)) == (hour >= 8 && hour <= 10)
@@ -419,7 +419,7 @@ using ..Constants
     end
 
 
-    @testset "on the hour nine-to-five weekdays" begin 
+    @testset "on the hour nine-to-five weekdays" begin
         for day in 1:20
             if isweekday(DateTime(2022,1,day,0,0,0))
                 for hour in 0:23
@@ -430,7 +430,7 @@ using ..Constants
     end
 
 
-    @testset "every Christmas Day at midnight" begin 
+    @testset "every Christmas Day at midnight" begin
         for month in 1:12
             for hour in 0:23
                 @test iscronmatch("0 0 0 25 12 ?", DateTime(2022,month,25,hour,0,0)) == (month == 12 && hour == 0)
@@ -438,7 +438,7 @@ using ..Constants
         end
     end
 
-    @testset "last day of the month at midnight" begin 
+    @testset "last day of the month at midnight" begin
         for month in 1:12
             num_days = daysinmonth(2022, month)
             for day in 1:num_days
@@ -450,7 +450,7 @@ using ..Constants
     end
 
 
-    @testset "third-to-last day of the month at midnight" begin 
+    @testset "third-to-last day of the month at midnight" begin
         for month in 1:12
             num_days = daysinmonth(2022, month)
             for day in 1:num_days
@@ -463,12 +463,12 @@ using ..Constants
 
     @testset "first weekday of the month at midnight" begin
 
-        @test iscronmatch("0 0 0 1W * *", DateTime(2022, 1, 3, 0, 0, 0)) 
-        @test iscronmatch("0 0 0 9W * *", DateTime(2022, 1, 10, 0, 0, 0)) 
-        @test iscronmatch("0 0 0 13W * *", DateTime(2022, 1, 13, 0, 0, 0)) 
-        @test iscronmatch("0 0 0 15W * *", DateTime(2022, 1, 14, 0, 0, 0)) 
-        @test iscronmatch("0 0 0 22W * *", DateTime(2022, 1, 21, 0, 0, 0)) 
-        @test iscronmatch("0 0 0 31W * *", DateTime(2022, 1, 31, 0, 0, 0)) 
+        @test iscronmatch("0 0 0 1W * *", DateTime(2022, 1, 3, 0, 0, 0))
+        @test iscronmatch("0 0 0 9W * *", DateTime(2022, 1, 10, 0, 0, 0))
+        @test iscronmatch("0 0 0 13W * *", DateTime(2022, 1, 13, 0, 0, 0))
+        @test iscronmatch("0 0 0 15W * *", DateTime(2022, 1, 14, 0, 0, 0))
+        @test iscronmatch("0 0 0 22W * *", DateTime(2022, 1, 21, 0, 0, 0))
+        @test iscronmatch("0 0 0 31W * *", DateTime(2022, 1, 31, 0, 0, 0))
 
     end
 
@@ -477,7 +477,7 @@ using ..Constants
         @test iscronmatch("0 0 0 LW * *", DateTime(2022, 1, 29, 0, 0, 0)) == false
         @test iscronmatch("0 0 0 LW * *", DateTime(2022, 1, 30, 0, 0, 0)) == false
         @test iscronmatch("0 0 0 LW * *", DateTime(2022, 1, 30, 0, 0, 0)) == false
-        @test iscronmatch("0 0 0 LW * *", DateTime(2022, 1, 31, 0, 0, 0)) 
+        @test iscronmatch("0 0 0 LW * *", DateTime(2022, 1, 31, 0, 0, 0))
     end
 
     @testset "last Friday of the month at midnight" begin
@@ -540,7 +540,7 @@ using ..Constants
     server = serve(async=true, port=PORT, show_banner=false)
     sleep(3)
 
-    try 
+    try
         internalrequest(HTTP.Request("GET", "/cron-increment"))
         internalrequest(HTTP.Request("GET", "/cron-increment"))
         @testset "Testing CRON API access" begin
@@ -551,10 +551,10 @@ using ..Constants
     catch e
         println(e)
     finally
-        close(server) 
+        close(server)
     end
 
-    
+
 
     end
 

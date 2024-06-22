@@ -1,6 +1,6 @@
-module CronManagementDemo 
+module CronManagementDemo
 
-using Oxygen
+using Kitten
 using HTTP
 using Dates
 
@@ -14,7 +14,7 @@ end
 
 # initialize the app with an already running cron job
 get(router("/log", cron="*/2")) do
-    logtime()  
+    logtime()
 end
 
 get("/register") do
@@ -29,7 +29,7 @@ get("/start") do
     "started jobs"
 end
 
-get("/clear") do 
+get("/clear") do
     @info "clearing jobs"
     clearcronjobs()
     "cleared jobs"
@@ -46,9 +46,9 @@ end
 end
 
 
-try 
+try
     serve()
-finally 
+finally
     terminate()
 end
 

@@ -1,12 +1,12 @@
-module RoutingFunctionsTests 
+module RoutingFunctionsTests
 using Test
 using HTTP
 using JSON3
 using StructTypes
 using Sockets
-using Dates 
+using Dates
 
-using Oxygen
+using Kitten
 
 ##### Setup Routes #####
 
@@ -59,7 +59,7 @@ end
 @testset "Routing Function Tests" begin
 
 
-    @testset "GET routing functions" begin 
+    @testset "GET routing functions" begin
         r = internalrequest(HTTP.Request("GET", "/inline/add/5/4"))
         @test r.status == 200
         @test text(r) == "9"
@@ -77,7 +77,7 @@ end
         @test text(r) == "9"
     end
 
-    @testset "POST routing functions" begin 
+    @testset "POST routing functions" begin
         r = internalrequest(HTTP.Request("POST", "/inline/sub/5/4"))
         @test r.status == 200
         @test text(r) == "1"
@@ -87,7 +87,7 @@ end
         @test text(r) == "1"
     end
 
-    @testset "PUT routing functions" begin 
+    @testset "PUT routing functions" begin
         r = internalrequest(HTTP.Request("PUT", "/inline/power/5/4"))
         @test r.status == 200
         @test text(r) == "625"
@@ -97,7 +97,7 @@ end
         @test text(r) == "625"
     end
 
-    @testset "PATCH routing functions" begin 
+    @testset "PATCH routing functions" begin
         r = internalrequest(HTTP.Request("PATCH", "/inline/mulitply/5/4"))
         @test r.status == 200
         @test text(r) == "20"
@@ -107,7 +107,7 @@ end
         @test text(r) == "20"
     end
 
-    @testset "DELETE routing functions" begin 
+    @testset "DELETE routing functions" begin
         r = internalrequest(HTTP.Request("DELETE", "/inline/divide/5/4"))
         @test r.status == 200
         @test text(r) == "1.25"

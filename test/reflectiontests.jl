@@ -2,8 +2,8 @@ module ReflectionTests
 
 using Test
 using Base: @kwdef
-using Oxygen: splitdef, Json
-using Oxygen.Core.Reflection: getsignames, parsetype, kwarg_struct_builder
+using Kitten: splitdef, Json
+using Kitten.Core.Reflection: getsignames, parsetype, kwarg_struct_builder
 
 
 global message = Dict("message" => "Hello, World!")
@@ -43,7 +43,7 @@ end
     parsetype(Float64, 3) == 3.0
 end
 
-@testset "JSON Nested extract" begin 
+@testset "JSON Nested extract" begin
 
     converted = kwarg_struct_builder(Home, Dict(
         :address => "123 main street",
@@ -76,7 +76,7 @@ end
         @test length(info.sig) == 5
     end
 
-    @testset "Args" begin 
+    @testset "Args" begin
         @test info.args[1].name == :a
         @test info.args[1].type == Int
 
@@ -130,8 +130,8 @@ end
 
 @testset "splitdef anonymous function tests" begin
     # Define a function for testing
-    
-    
+
+
     # Parse the function info
     info = getinfo(function(a::Int, b::Float64; c="default", d=true, request)
         return a, b, c, d
@@ -144,7 +144,7 @@ end
         @test length(info.sig) == 5
     end
 
-    @testset "Args" begin 
+    @testset "Args" begin
         @test info.args[1].name == :a
         @test info.args[1].type == Int
 
@@ -208,7 +208,7 @@ end
         @test length(info.sig) == 2
     end
 
-    @testset "Args" begin 
+    @testset "Args" begin
         @test info.args[1].name == :a
         @test info.args[1].type == Int
 
@@ -243,7 +243,7 @@ end
         @test length(info.sig_map) == 5
     end
 
-    @testset "Args" begin 
+    @testset "Args" begin
         @test info.args[1].name == :a
         @test info.args[1].type == Int
 
@@ -252,7 +252,7 @@ end
         @test info.args[2].default isa Json{Home}
 
         @test info.args[3].name == :msg
-        @test info.args[3].type == Dict{String, String} 
+        @test info.args[3].type == Dict{String, String}
     end
 
     @testset "Kwargs" begin

@@ -1,5 +1,5 @@
-module ParallelDemo 
-using Oxygen
+module ParallelDemo
+using Kitten
 using HTTP
 using JSON3
 using StructTypes

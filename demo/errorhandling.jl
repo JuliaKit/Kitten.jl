@@ -1,6 +1,6 @@
-module ErrorHandlingDemo 
+module ErrorHandlingDemo
 
-using Oxygen
+using Kitten
 using HTTP
 
 @get "/" function(req::HTTP.Request)
@@ -15,10 +15,10 @@ end
 
 function errorcatcher(handle)
     function(req)
-        try 
+        try
             response = handle(req)
             return response
-        catch e 
+        catch e
             return HTTP.Response(500, "here's a custom error response")
         end
     end

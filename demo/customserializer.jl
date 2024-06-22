@@ -1,6 +1,6 @@
-module CustomSerializerDemo 
+module CustomSerializerDemo
 
-using Oxygen
+using Kitten
 using HTTP
 using JSON3
 

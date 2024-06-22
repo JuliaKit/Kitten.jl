@@ -1,9 +1,9 @@
-name = "Kernel"
+name = "Kitten"
 uuid = "f3bba2a0-7958-11e9-34b2-8fb942d32ac7"
 authors = ["Billgo <cocobill@vip.qq.com>"]
 license = "MIT"
 version = "0.1.0"
-repository = "https://github.com/JuliaKit/Kernel.jl.git"
+repository = "https://github.com/JuliaKit/Kitten.jl.git"
 description = "A toolkit library for Julia"
 
 [deps]
@@ -54,4 +54,15 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 WGLMakie = "276b4fcb-3e11-5398-bf8b-a0c2d153d008"
 
 [targets]
-test = ["Bonito", "CairoMakie", "Mustache", "OteraEngine", "Pkg", "ProtoBuf", "StructTypes", "Suppressor", "Test", "WGLMakie"]
+test = [
+    "Bonito",
+    "CairoMakie",
+    "Mustache",
+    "OteraEngine",
+    "Pkg",
+    "ProtoBuf",
+    "StructTypes",
+    "Suppressor",
+    "Test",
+    "WGLMakie",
+]

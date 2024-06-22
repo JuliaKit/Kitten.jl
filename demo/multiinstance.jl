@@ -1,7 +1,7 @@
 module MultiInstanceDemo
 
 module A
-    using Oxygen; @oxidise
+    using Kitten; @oxidise
 
     @get "/" function()
         text("server A")
@@ -13,14 +13,14 @@ module A
 end
 
 module B
-    using Oxygen; @oxidise
+    using Kitten; @oxidise
 
     @get "/" function()
         text("server B")
     end
 end
 
-try 
+try
     A.serve(port=8001, async=true)
     B.serve(port=8002, async=false)
 finally

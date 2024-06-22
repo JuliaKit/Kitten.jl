@@ -3,11 +3,12 @@ using HTTP
 using Test
 using Bonito
 using WGLMakie: heatmap
-using Oxygen; @oxidise
-import Oxygen: text, html
+using Kitten
+@oxidise
+import Kitten: text, html
 using ..Constants
 
-@testset "WGLMakie Utils tests" begin 
+@testset "WGLMakie Utils tests" begin
     # create a random heatmap
     fig = heatmap(rand(50, 50))
 
@@ -20,16 +21,16 @@ end
 
 @testset "WGLMakie server tests" begin
 
-    get("/") do 
+    get("/") do
         text("hello world")
     end
 
-    get("/html") do 
+    get("/html") do
         html("hello world")
     end
 
     # generate a random plot
-    get("/plot/html") do 
+    get("/plot/html") do
         fig = heatmap(rand(50, 50))
         html(fig)
     end

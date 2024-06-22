@@ -1,10 +1,10 @@
 using Documenter
-using Oxygen
+using Kitten
 
 makedocs(
-    sitename = "Oxygen.jl",
+    sitename = "Kitten.jl",
     format = Documenter.HTML(),
-    modules = [Oxygen],
+    modules = [Kitten],
     pages = [
         "Overview" => "index.md",
         "api.md",
@@ -25,8 +25,6 @@ makedocs(
 # See "Hosting Documentation" and deploydocs() in the Documenter manual
 # for more information.
 deploydocs(
-    repo = "github.com/OxygenFramework/Oxygen.jl.git",
+    repo = "github.com/JuliaKit/Kitten.jl.git",
     push_preview = false
 )
-
-

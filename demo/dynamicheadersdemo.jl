@@ -1,6 +1,6 @@
 module DynamicHeadersDemo
 
-using Oxygen
+using Kitten
 using HTTP
 
 get("/") do req::HTTP.Request

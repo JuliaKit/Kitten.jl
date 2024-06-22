@@ -1,10 +1,10 @@
-module CronDemo 
+module CronDemo
 
-using Oxygen
+using Kitten
 using HTTP
 using Dates
 
-# You can use the @cron macro directly 
+# You can use the @cron macro directly
 
 @cron "*/2" function()
     println("every 2 seconds")

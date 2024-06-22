@@ -1,6 +1,6 @@
 module BankingAppDemo
 using Base: @kwdef
-using Oxygen
+using Kitten
 
 struct Address
     street::String

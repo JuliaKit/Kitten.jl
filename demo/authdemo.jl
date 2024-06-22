@@ -1,6 +1,6 @@
-module AuthDemo 
+module AuthDemo
 
-using Oxygen
+using Kitten
 using HTTP
 
 @get "/divide/{a}/{b}" function(req::HTTP.Request, a::Float64, b::Float64)
@@ -18,7 +18,7 @@ function CorsMiddleware(handler)
     return function(req::HTTP.Request)
         if HTTP.method(req)=="OPTIONS"
             return HTTP.Response(200, CORS_HEADERS)
-        else 
+        else
             return handler(req)
         end
     end
@@ -29,7 +29,7 @@ function AuthMiddleware(handler)
         # ** NOT an actual security check ** #
         if !HTTP.headercontains(req, "Authorization", "true")
             return HTTP.Response(403)
-        else 
+        else
             return HTTP.Response(200, body=string(handler(req)))
         end
     end
@@ -38,4 +38,4 @@ end
 # There is no hard limit on the number of middleware functions you can add
 serve(middleware=[CorsMiddleware, AuthMiddleware])
 
-end 
+end

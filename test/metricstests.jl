@@ -1,12 +1,12 @@
-module MetricsTests 
+module MetricsTests
 using Test
-using Dates 
+using Dates
 using HTTP
-using Oxygen
+using Kitten
 
 using ..Constants
 
-using Oxygen.Core.Metrics:
+using Kitten.Core.Metrics:
     percentile, HTTPTransaction, TimeseriesRecord, get_history, push_history,
     group_transactions, get_transaction_metrics, recent_transactions,
     all_endpoint_metrics, server_metrics, error_distribution,
@@ -23,7 +23,7 @@ function create_mock_transactions(n::Int)
     [HTTPTransaction("192.168.1.$i", "/test/$i", MOCK_TIMESTAMP, 0.1 * i, i % 2 == 0, 200 + i, nothing) for i in 1:n]
 end
 
-const HISTORY = Oxygen.History(1_000_000)
+const HISTORY = Kitten.History(1_000_000)
 
 function clear_history()
     empty!(HISTORY)
@@ -131,7 +131,7 @@ end
 end
 
 module A
-    using Oxygen; @oxidise
+    using Kitten; @oxidise
 
     @get "/" function()
         text("server A")
@@ -139,7 +139,7 @@ module A
 end
 
 @testset "metrics collection & calculations" begin
-    try 
+    try
         A.serve(host=HOST, port=PORT, async=true, show_banner=false, access_log=nothing)
 
         # send a couple requests so we can collect metrics
@@ -159,6 +159,6 @@ end
         A.terminate()
     end
 
-end 
+end
 
 end

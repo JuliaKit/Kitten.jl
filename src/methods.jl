@@ -7,21 +7,21 @@ Reset all the internal state variables
 """
 function resetstate()
     # prevent context reset when created at compile-time
-    if (@__MODULE__) == Kernel
-        CONTEXT[] = Kernel.Core.Context()
+    if (@__MODULE__) == Kitten
+        CONTEXT[] = Kitten.Core.Context()
     end
 end
 
-function serve(; kwargs...) 
+function serve(; kwargs...)
     async = Base.get(kwargs, :async, false)
     try
         # return the resulting HTTP.Server object
-        return Kernel.Core.serve(CONTEXT[]; kwargs...)
+        return Kitten.Core.serve(CONTEXT[]; kwargs...)
     finally
         # close server on exit if we aren't running asynchronously
-        if !async 
+        if !async
             terminate()
-            # only reset state on exit if we aren't running asynchronously & are running it interactively 
+            # only reset state on exit if we aren't running asynchronously & are running it interactively
             isinteractive() && resetstate()
         end
     end
@@ -33,7 +33,7 @@ end
 
 """
 function serveparallel(; kwargs...)
-    serve(; parallel = true, kwargs...)
+    serve(; parallel=true, kwargs...)
 end
 
 
@@ -42,7 +42,7 @@ end
 """
     @get(path::String, func::Function)
 
-Used to register a function to a specific endpoint to handle GET requests  
+Used to register a function to a specific endpoint to handle GET requests
 """
 macro get(path, func)
     path, func = adjustparams(path, func)
@@ -123,14 +123,14 @@ end
 """
     adjustparams(path, func)
 
-Adjust the order of `path` and `func` based on their types. This is used to support the `do ... end` syntax for 
+Adjust the order of `path` and `func` based on their types. This is used to support the `do ... end` syntax for
 the routing macros.
 """
 function adjustparams(path, func)
     # case 1: do ... end block syntax was used
     if isa(path, Expr) && path.head == :->
         func, path
-    # case 2: regular syntax was used
+        # case 2: regular syntax was used
     else
         path, func
     end
@@ -140,7 +140,7 @@ end
 
 function route(methods::Vector{String}, path::Union{String,Function}, func::Function)
     for method in methods
-        Kernel.Core.register(CONTEXT[], method, path, func)
+        Kitten.Core.register(CONTEXT[], method, path, func)
     end
 end
 
@@ -149,28 +149,28 @@ route(func::Function, methods::Vector{String}, path::Union{String,Function}) = r
 
 ### Special Routing Functions Support for do..end Syntax ###
 
-stream(func::Function, path::String)    = route([STREAM], path, func)
-stream(func::Function, path::Function)  = route([STREAM], path, func)
+stream(func::Function, path::String) = route([STREAM], path, func)
+stream(func::Function, path::Function) = route([STREAM], path, func)
 
-websocket(func::Function, path::String)    = route([WEBSOCKET], path, func)
-websocket(func::Function, path::Function)  = route([WEBSOCKET], path, func)
+websocket(func::Function, path::String) = route([WEBSOCKET], path, func)
+websocket(func::Function, path::Function) = route([WEBSOCKET], path, func)
 
 ### Core Routing Functions Support for do..end Syntax ###
 
-get(func::Function, path::String)       = route([GET], path, func)
-get(func::Function, path::Function)     = route([GET], path, func)
+get(func::Function, path::String) = route([GET], path, func)
+get(func::Function, path::Function) = route([GET], path, func)
 
-post(func::Function, path::String)      = route([POST], path, func)
-post(func::Function, path::Function)    = route([POST], path, func)
+post(func::Function, path::String) = route([POST], path, func)
+post(func::Function, path::Function) = route([POST], path, func)
 
-put(func::Function, path::String)       = route([PUT], path, func) 
-put(func::Function, path::Function)     = route([PUT], path, func) 
+put(func::Function, path::String) = route([PUT], path, func)
+put(func::Function, path::Function) = route([PUT], path, func)
 
-patch(func::Function, path::String)     = route([PATCH], path, func)
-patch(func::Function, path::Function)   = route([PATCH], path, func)
+patch(func::Function, path::String) = route([PATCH], path, func)
+patch(func::Function, path::Function) = route([PATCH], path, func)
 
-delete(func::Function, path::String)    = route([DELETE], path, func)
-delete(func::Function, path::Function)  = route([DELETE], path, func)
+delete(func::Function, path::String) = route([DELETE], path, func)
+delete(func::Function, path::Function) = route([DELETE], path, func)
 
 
 
@@ -180,9 +180,9 @@ delete(func::Function, path::Function)  = route([DELETE], path, func)
 Mount all files inside the /static folder (or user defined mount point)
 """
 macro staticfiles(folder, mountdir="static", headers=[])
-    printstyled("@staticfiles macro is deprecated, please use the staticfiles() function instead\n", color = :red, bold = true) 
+    printstyled("@staticfiles macro is deprecated, please use the staticfiles() function instead\n", color=:red, bold=true)
     quote
-        staticfiles($(esc(folder)), $(esc(mountdir)); headers=$(esc(headers))) 
+        staticfiles($(esc(folder)), $(esc(mountdir)); headers=$(esc(headers)))
     end
 end
 
@@ -190,48 +190,48 @@ end
 """
     @dynamicfiles(folder::String, mountdir::String, headers::Vector{Pair{String,String}}=[])
 
-Mount all files inside the /static folder (or user defined mount point), 
+Mount all files inside the /static folder (or user defined mount point),
 but files are re-read on each request
 """
 macro dynamicfiles(folder, mountdir="static", headers=[])
-    printstyled("@dynamicfiles macro is deprecated, please use the dynamicfiles() function instead\n", color = :red, bold = true) 
+    printstyled("@dynamicfiles macro is deprecated, please use the dynamicfiles() function instead\n", color=:red, bold=true)
     quote
-        dynamicfiles($(esc(folder)), $(esc(mountdir)); headers=$(esc(headers))) 
-    end      
+        dynamicfiles($(esc(folder)), $(esc(mountdir)); headers=$(esc(headers)))
+    end
 end
 
 
 staticfiles(
-    folder::String, 
-    mountdir::String="static"; 
-    headers::Vector=[], 
+    folder::String,
+    mountdir::String="static";
+    headers::Vector=[],
     loadfile::Nullable{Function}=nothing
-) = Kernel.Core.staticfiles(CONTEXT[].service.router, folder, mountdir; headers, loadfile)
+) = Kitten.Core.staticfiles(CONTEXT[].service.router, folder, mountdir; headers, loadfile)
 
 
 dynamicfiles(
-    folder::String, 
-    mountdir::String="static"; 
-    headers::Vector=[], 
+    folder::String,
+    mountdir::String="static";
+    headers::Vector=[],
     loadfile::Nullable{Function}=nothing
-) = Kernel.Core.dynamicfiles(CONTEXT[].service.router, folder, mountdir; headers, loadfile)
+) = Kitten.Core.dynamicfiles(CONTEXT[].service.router, folder, mountdir; headers, loadfile)
 
 
-internalrequest(req::Kernel.Request; middleware::Vector=[], metrics::Bool=false, serialize::Bool=true, catch_errors=true) = 
-    Kernel.Core.internalrequest(CONTEXT[], req; middleware, metrics, serialize, catch_errors)
+internalrequest(req::Kitten.Request; middleware::Vector=[], metrics::Bool=false, serialize::Bool=true, catch_errors=true) =
+    Kitten.Core.internalrequest(CONTEXT[], req; middleware, metrics, serialize, catch_errors)
 
-function router(prefix::String = ""; 
-                tags::Vector{String} = Vector{String}(), 
-                middleware::Nullable{Vector} = nothing, 
-                interval::Nullable{Real} = nothing,
-                cron::Nullable{String} = nothing)
+function router(prefix::String="";
+    tags::Vector{String}=Vector{String}(),
+    middleware::Nullable{Vector}=nothing,
+    interval::Nullable{Real}=nothing,
+    cron::Nullable{String}=nothing)
 
-    return Kernel.Core.router(CONTEXT[], prefix; tags, middleware, interval, cron)
+    return Kitten.Core.router(CONTEXT[], prefix; tags, middleware, interval, cron)
 end
 
 
-mergeschema(route::String, customschema::Dict) = Kernel.Core.mergeschema(CONTEXT[].docs.schema, route, customschema)
-mergeschema(customschema::Dict) = Kernel.Core.mergeschema(CONTEXT[].docs.schema, customschema)
+mergeschema(route::String, customschema::Dict) = Kitten.Core.mergeschema(CONTEXT[].docs.schema, route, customschema)
+mergeschema(customschema::Dict) = Kitten.Core.mergeschema(CONTEXT[].docs.schema, customschema)
 
 
 """
@@ -259,36 +259,36 @@ end
 """
     @repeat(interval::Real, func::Function)
 
-Registers a repeat task. This will extract either the function name 
-or the random Id julia assigns to each lambda function. 
+Registers a repeat task. This will extract either the function name
+or the random Id julia assigns to each lambda function.
 """
 macro repeat(interval, func)
-    quote 
-        Kernel.Core.task($(CONTEXT[].tasks.registered_tasks), $(esc(interval)), string($(esc(func))), $(esc(func)))
+    quote
+        Kitten.Core.task($(CONTEXT[].tasks.registered_tasks), $(esc(interval)), string($(esc(func))), $(esc(func)))
     end
 end
 
 """
 @repeat(interval::Real, name::String, func::Function)
 
-This variation provides way manually "name" a registered repeat task. This information 
+This variation provides way manually "name" a registered repeat task. This information
 is used by the server on startup to log out all cron jobs.
 """
 macro repeat(interval, name, func)
-    quote 
-        Kernel.Core.task($(CONTEXT[].tasks.registered_tasks), $(esc(interval)), string($(esc(name))), $(esc(func)))
+    quote
+        Kitten.Core.task($(CONTEXT[].tasks.registered_tasks), $(esc(interval)), string($(esc(name))), $(esc(func)))
     end
 end
 
 """
     @cron(expression::String, func::Function)
 
-Registers a function with a cron expression. This will extract either the function name 
-or the random Id julia assigns to each lambda function. 
+Registers a function with a cron expression. This will extract either the function name
+or the random Id julia assigns to each lambda function.
 """
 macro cron(expression, func)
-    quote 
-        Kernel.Core.cron($(CONTEXT[].cron.registered_jobs), $(esc(expression)), string($(esc(func))), $(esc(func)))
+    quote
+        Kitten.Core.cron($(CONTEXT[].cron.registered_jobs), $(esc(expression)), string($(esc(func))), $(esc(func)))
     end
 end
 
@@ -296,59 +296,59 @@ end
 """
     @cron(expression::String, name::String, func::Function)
 
-This variation provides way manually "name" a registered function. This information 
+This variation provides way manually "name" a registered function. This information
 is used by the server on startup to log out all cron jobs.
 """
 macro cron(expression, name, func)
-    quote 
-        Kernel.Core.cron($(CONTEXT[].cron.registered_jobs), $(esc(expression)), string($(esc(name))), $(esc(func)))
+    quote
+        Kitten.Core.cron($(CONTEXT[].cron.registered_jobs), $(esc(expression)), string($(esc(name))), $(esc(func)))
     end
 end
 
 ## Cron Job Functions ##
 
 function startcronjobs(ctx::Context)
-    Kernel.Core.registercronjobs(ctx)
-    Kernel.Core.startcronjobs(ctx.cron)
+    Kitten.Core.registercronjobs(ctx)
+    Kitten.Core.startcronjobs(ctx.cron)
 end
 
 startcronjobs() = startcronjobs(CONTEXT[])
 
-stopcronjobs(ctx::Context) = Kernel.Core.stopcronjobs(ctx.cron)
+stopcronjobs(ctx::Context) = Kitten.Core.stopcronjobs(ctx.cron)
 stopcronjobs() = stopcronjobs(CONTEXT[])
 
-clearcronjobs(ctx::Context) = Kernel.Core.clearcronjobs(ctx.cron)
+clearcronjobs(ctx::Context) = Kitten.Core.clearcronjobs(ctx.cron)
 clearcronjobs() = clearcronjobs(CONTEXT[])
 
 ### Repeat Task Functions ###
 
-function starttasks(context::Context) 
-    Kernel.Core.registertasks(context)
-    Kernel.Core.starttasks(context.tasks)
+function starttasks(context::Context)
+    Kitten.Core.registertasks(context)
+    Kitten.Core.starttasks(context.tasks)
 end
 
 starttasks() = starttasks(CONTEXT[])
 
 
-stoptasks(context::Context) = Kernel.Core.stoptasks(context.tasks)
+stoptasks(context::Context) = Kitten.Core.stoptasks(context.tasks)
 stoptasks() = stoptasks(CONTEXT[])
 
-cleartasks(context::Context) = Kernel.Core.cleartasks(context.tasks)
+cleartasks(context::Context) = Kitten.Core.cleartasks(context.tasks)
 cleartasks() = cleartasks(CONTEXT[])
 
 
 ### Terminate Function ###
 
-terminate(context::Context) = Kernel.Core.terminate(context)
+terminate(context::Context) = Kitten.Core.terminate(context)
 terminate() = terminate(CONTEXT[])
 
 
 ### Setup Docs Strings ###
 
 
-for method in [:serve, :terminate, :staticfiles, :dynamicfiles,  :internalrequest]
+for method in [:serve, :terminate, :staticfiles, :dynamicfiles, :internalrequest]
     eval(quote
-        @doc (@doc(Kernel.Core.$method)) $method
+        @doc (@doc(Kitten.Core.$method)) $method
     end)
 end
 
@@ -356,14 +356,14 @@ end
 # Docs Methods
 for method in [:router, :mergeschema]
     eval(quote
-        @doc (@doc(Kernel.Core.AutoDoc.$method)) $method
+        @doc (@doc(Kitten.Core.AutoDoc.$method)) $method
     end)
 end
 
 # Repeat Task methods
 for method in [:starttasks, :stoptasks, :cleartasks]
     eval(quote
-        @doc (@doc(Kernel.Core.RepeatTasks.$method)) $method
+        @doc (@doc(Kitten.Core.RepeatTasks.$method)) $method
     end)
 end
 
@@ -371,7 +371,6 @@ end
 # Cron methods
 for method in [:startcronjobs, :stopcronjobs, :clearcronjobs]
     eval(quote
-        @doc (@doc(Kernel.Core.Cron.$method)) $method
+        @doc (@doc(Kitten.Core.Cron.$method)) $method
     end)
 end
-

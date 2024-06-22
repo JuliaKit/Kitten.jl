@@ -3,7 +3,7 @@ module SSEDemo
 using JSON3
 using Dates
 using HTTP
-using Oxygen
+using Kitten
 
 @get "/" function()
     html("""
@@ -39,7 +39,7 @@ end
     HTTP.setheader(stream, "Content-Type" => "text/event-stream")
     HTTP.setheader(stream, "Cache-Control" => "no-cache")
 
-    
+
     while true
         message = "The time is: $(now())"
 

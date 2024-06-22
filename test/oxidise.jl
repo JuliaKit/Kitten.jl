@@ -3,7 +3,7 @@ module OxidiseTest
 using Test
 using HTTP
 using ..Constants
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 @get "/test" function(req)
     return "Hello World"

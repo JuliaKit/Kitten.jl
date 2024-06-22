@@ -3,7 +3,8 @@ module TestPackage
 using Base: @kwdef
 
 push!(LOAD_PATH, "../../")
-using Oxygen; @oxidise
+using Kitten
+@oxidise
 
 export start, stop
 
@@ -16,16 +17,16 @@ get("/") do
     text("hello world")
 end
 
-@get "/add" function(req::Request, a::Int, b::Int=3)
+@get "/add" function (req::Request, a::Int, b::Int=3)
     a + b
 end
 
-@get "/add/extractor" function(req::Request, qparams::Query{Add})
+@get "/add/extractor" function (req::Request, qparams::Query{Add})
     add = qparams.payload
     add.a + add.b
 end
 
-start(;kwargs...) = serve(;kwargs...)
+start(; kwargs...) = serve(; kwargs...)
 stop() = terminate()
 
 end

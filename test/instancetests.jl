@@ -2,13 +2,13 @@ module MultiInstanceTests
 
 using Test
 using HTTP
-using Oxygen
+using Kitten
 using ..Constants
 
 # Setup the first app
 app1 = instance()
 
-app1.get("/") do 
+app1.get("/") do
     "welcome to server #1"
 end
 
@@ -19,7 +19,7 @@ end
 # Setup the second app
 app2 = instance()
 
-app2.get("/") do 
+app2.get("/") do
     "welcome to server #2"
 end
 

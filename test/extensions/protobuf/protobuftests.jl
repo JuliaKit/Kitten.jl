@@ -3,13 +3,13 @@ module ProtobufTests
 using Test
 using HTTP
 using ProtoBuf
-using Oxygen: protobuf
+using Kitten: protobuf
 
-include("messages/people_pb.jl");
+include("messages/people_pb.jl")
 using .people_pb: People, Person
 
-include("messages/test_pb.jl");
-using .test_pb: MyMessage 
+include("messages/test_pb.jl")
+using .test_pb: MyMessage
 
 @testset "Protobuf decoder test" begin
     message = MyMessage(-1, ["a", "b"])

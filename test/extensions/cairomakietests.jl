@@ -2,11 +2,12 @@ module CairoMakieTests
 using HTTP
 using Test
 using CairoMakie: heatmap
-using Oxygen; @oxidise
-import Oxygen: text
+using Kitten
+@oxidise
+import Kitten: text
 using ..Constants
 
-@testset "CairoMakie Utils" begin 
+@testset "CairoMakie Utils" begin
     # create a random heatmap
     fig, ax, pl = heatmap(rand(50, 50))
 
@@ -37,31 +38,31 @@ end
 
 @testset "CairoMakie server" begin
 
-    get("/") do 
+    get("/") do
         text("hello world")
     end
 
-    get("/html") do 
+    get("/html") do
         html("hello world")
     end
 
     # generate a random plot
-    get("/plot/png") do 
+    get("/plot/png") do
         fig, ax, pl = heatmap(rand(50, 50)) # or something
         png(fig)
     end
 
-    get("/plot/svg") do 
+    get("/plot/svg") do
         fig, ax, pl = heatmap(rand(50, 50)) # or something
         svg(fig)
     end
 
-    get("/plot/pdf") do 
+    get("/plot/pdf") do
         fig, ax, pl = heatmap(rand(50, 50)) # or something
         pdf(fig)
     end
 
-    get("/plot/html") do 
+    get("/plot/html") do
         fig, ax, pl = heatmap(rand(50, 50)) # or something
         html(fig)
     end

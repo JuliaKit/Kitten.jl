@@ -2,7 +2,7 @@ module StreamingTests
 using Test
 using HTTP
 using ..Constants
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 function explicit_stream(stream::HTTP.Stream)
     # Set headers
@@ -55,7 +55,7 @@ serve(port=PORT, host=HOST, async=true,  show_errors=false, show_banner=false, a
     end
 
     @testset "Can't setup implicit stream handler on regular routing macros & functions " begin
-        try 
+        try
             response = HTTP.get("$localhost/api/error",  headers=Dict("Connection" => "close"))
             @test false
         catch e

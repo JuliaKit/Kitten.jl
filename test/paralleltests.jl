@@ -3,11 +3,11 @@ module ParallelTests
 using Test
 using HTTP
 using Suppressor
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 using ..Constants
 
-@testset "parallel tests" begin 
+@testset "parallel tests" begin
 
     invocation = []
 
@@ -71,10 +71,10 @@ using ..Constants
 
         try
             @suppress_err r = HTTP.get("$localhost/customerror", connect_timeout=3)
-        catch e 
+        catch e
             @test e isa MethodError || e isa HTTP.ExceptionRequest.StatusError
         end
-        
+
         terminate()
 
         serveparallel(host=HOST, port=PORT, middleware=[handler1, handler2, handler3], show_errors=true, async=true, show_banner=false)

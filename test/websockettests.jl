@@ -3,14 +3,14 @@ using Test
 using HTTP
 using HTTP.WebSockets
 using ..Constants
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 websocket("/ws") do ws::HTTP.WebSocket
-    try 
+    try
         for msg in ws
             send(ws, "Received message: $msg")
         end
-    catch e 
+    catch e
         if !isa(e, HTTP.WebSockets.WebSocketError)
             rethrow(e)
         end
@@ -19,11 +19,11 @@ end
 
 wsrouter = router("/router")
 websocket(wsrouter("/ws")) do ws::HTTP.WebSocket
-    try 
+    try
         for msg in ws
             send(ws, "Received message: $msg")
         end
-    catch e 
+    catch e
         if !isa(e, HTTP.WebSockets.WebSocketError)
             rethrow(e)
         end
@@ -32,7 +32,7 @@ end
 
 
 @websocket "/ws/{x}" function(ws, x::Int)
-    try 
+    try
         for msg in ws
             send(ws, "Received message from $x: $msg")
         end
@@ -45,7 +45,7 @@ end
 
 # Test if @get works with WebSockets (based on the type of the first argument)
 @get "/ws/get" function(ws::HTTP.WebSocket)
-    try 
+    try
         for msg in ws
             send(ws, "Received message: $msg")
         end

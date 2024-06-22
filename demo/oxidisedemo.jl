@@ -1,9 +1,9 @@
 module OxidiseDemo
 
-using Oxygen; @oxidise
+using Kitten; @oxidise
 
 @get("/") do req
-    "home" 
+    "home"
 end
 
 @get("/nihao") do req
