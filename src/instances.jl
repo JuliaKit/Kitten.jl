@@ -49,7 +49,7 @@ function load(path::String)
     absolute_path = fullpath(path)
 
     !isfile(absolute_path) && throw("not a valid file")
-    
+
     # Read the file content
     content = read(absolute_path, String)
 
@@ -66,8 +66,8 @@ end
 
 """
     instance()
-Create a new self-containedinstance of the Kernel module. 
-This done by creating a new unique module at runtime and loading the Kernel module into it.
+Create a new self-containedinstance of the Kitten module.
+This done by creating a new unique module at runtime and loading the Kitten module into it.
 This results in a unique instance of the Kernel module that can be used independently.
 """
 function instance()
@@ -75,7 +75,7 @@ function instance()
     mod_def = Expr(:module, false, gensym(),
         Expr(:block,
             :(using Base),
-            load("Kernel.jl")
+            load("Kitten.jl")
         )
     )
     # Evaluate the module definition to actually create it

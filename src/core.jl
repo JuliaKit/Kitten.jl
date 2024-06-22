@@ -13,7 +13,7 @@ using DataStructures: CircularDeque
 import Base.Threads: lock
 
 include("util.jl");         @reexport using .Util
-include("types.jl");        @reexport using .Types 
+include("types.jl");        @reexport using .Types
 include("constants.jl");    @reexport using .Constants
 include("handlers.jl");     @reexport using .Handlers
 include("context.jl");      @reexport using .AppContext
@@ -29,19 +29,19 @@ include("autodoc.jl");      @reexport using .AutoDoc
 export start, serve, serveparallel, terminate,
     internalrequest, staticfiles, dynamicfiles
 
-kernel_title = raw"""
-   ____                            
-  / __ \_  ____  ______ ____  ____ 
+kitten_title = raw"""
+   ____
+  / __ \_  ____  ______ ____  ____
  / / / / |/_/ / / / __ `/ _ \/ __ \
 / /_/ />  </ /_/ / /_/ /  __/ / / /
-\____/_/|_|\__, /\__, /\___/_/ /_/ 
-          /____//____/   
+\____/_/|_|\__, /\__, /\___/_/ /_/
+          /____//____/
 
 """
 
 function serverwelcome(host::String, port::Int, docs::Bool, metrics::Bool, parallel::Bool, docspath::String)
-    printstyled(kernel_title, color=:blue, bold=true)
-    @info "📦 Version 1.5.12 (2024-06-18)"
+    printstyled(kitten_title, color=:blue, bold=true)
+    @info "📦 Version 0.1.0 (2024-06-18)"
     @info "✅ Started server: http://$host:$port"
     if docs
         @info "📖 Documentation: http://$host:$port$docspath"
@@ -155,7 +155,7 @@ end
 """
     decorate_request(ip::IPAddr)
 
-This function can be used to add additional usefull metadata to the incoming 
+This function can be used to add additional usefull metadata to the incoming
 request context dictionary. At the moment, it just inserts the caller's ip address
 """
 function decorate_request(ip::IPAddr, stream::HTTP.Stream)
@@ -188,8 +188,8 @@ end
 """
     parallel_stream_handler(handle_stream::Function)
 
-This function uses `Threads.@spawn` to schedule a new task on any available thread. 
-Inside this task, `@async` is used for cooperative multitasking, allowing the task to yield during I/O operations. 
+This function uses `Threads.@spawn` to schedule a new task on any available thread.
+Inside this task, `@async` is used for cooperative multitasking, allowing the task to yield during I/O operations.
 """
 function parallel_stream_handler(handle_stream::Function)
     function (stream::HTTP.Stream)
@@ -204,7 +204,7 @@ end
 
 """
 Compose the user & internally defined middleware functions together. Practically, this allows
-users to 'chain' middleware functions like `serve(handler1, handler2, handler3)` when starting their 
+users to 'chain' middleware functions like `serve(handler1, handler2, handler3)` when starting their
 application and have them execute in the order they were passed (left to right) for each incoming request
 """
 function setupmiddleware(ctx::Context; middleware::Vector=[], docs::Bool=true, metrics::Bool=true, serialize::Bool=true, catch_errors::Bool=true, show_errors=true)::Function
@@ -276,7 +276,7 @@ function preprocesskwargs(kwargs)
     # always set to streaming mode (regardless of what was passed)
     kwargs_dict[:stream] = true
 
-    # user passed no loggin preferences - use defualt logging format 
+    # user passed no loggin preferences - use defualt logging format
     if isempty(kwargs_dict) || !haskey(kwargs_dict, :access_log)
         kwargs_dict[:access_log] = logfmt"$time_iso8601 - $remote_addr:$remote_port - \"$request\" $status"
     end
@@ -373,20 +373,20 @@ function parse_route(httpmethod::String, route::Union{String,Function})::String
     if isa(route, Function)
 
         # This is true when the user passes the router() directly to the path.
-        # We call the generated function without args so it uses the default args 
+        # We call the generated function without args so it uses the default args
         # from the parent function.
         if countargs(route) == 1
             route = route()
         end
 
-        # If it's still a function, then that means this is from the 3rd inner function 
+        # If it's still a function, then that means this is from the 3rd inner function
         # defined in the createrouter() function.
         if countargs(route) == 2
             route = route(httpmethod)
         end
     end
 
-    # if the route is still a function, then it's from the  3rd inner function 
+    # if the route is still a function, then it's from the  3rd inner function
     # defined in the createrouter() function when the 'router()' function is passed directly.
     if isa(route, Function)
         route = route(httpmethod)
@@ -407,7 +407,7 @@ function parse_func_params(route::String, func::Function)
         4. extrators can be used alongside traditional path & query params
     """
 
-    info = splitdef(func, start=2) # skip the indentifying first arg 
+    info = splitdef(func, start=2) # skip the indentifying first arg
 
     # collect path param definitions from the route string
     hasBraces = r"({)|(})"
@@ -513,7 +513,7 @@ end
 
 
 """
-This alternaive registers a route wihout generating any documentation for it. Used primarily for internal routes like 
+This alternaive registers a route wihout generating any documentation for it. Used primarily for internal routes like
 docs and metrics
 """
 function register(router::Router, httpmethod::String, route::Union{String,Function}, func::Function)
@@ -527,8 +527,8 @@ end
 
 
 """
-Given an incoming request, parse out each argument and prepare it to get passed to the 
-corresponding handler. 
+Given an incoming request, parse out each argument and prepare it to get passed to the
+corresponding handler.
 """
 function extract_params(req::HTTP.Request, func_details)::Vector{Any}
     info = func_details.info
@@ -600,7 +600,7 @@ function setupdocs(ctx::Context)
     setupdocs(ctx.docs.router[], ctx.docs.schema, ctx.docs.docspath[], ctx.docs.schemapath[])
 end
 
-# add the swagger and swagger/schema routes 
+# add the swagger and swagger/schema routes
 function setupdocs(router::Router, schema::Dict, docspath::String, schemapath::String)
     full_schema = "$docspath$schemapath"
     register(router, "GET", "$docspath", () -> swaggerhtml(full_schema, docspath))
@@ -613,7 +613,7 @@ function setupmetrics(context::Context)
     setupmetrics(context.docs.router[], context.service.history, context.docs.docspath[], context.service.history_lock)
 end
 
-# add the swagger and swagger/schema routes 
+# add the swagger and swagger/schema routes
 function setupmetrics(router::Router, history::History, docspath::String, history_lock::ReentrantLock)
 
     # This allows us to customize the path to the metrics dashboard
@@ -622,7 +622,7 @@ function setupmetrics(router::Router, history::History, docspath::String, histor
         # only replace content if it's in a generated file
         ext = lowercase(last(splitext(filepath)))
         if ext in [".html", ".css", ".js"]
-            return replace(content, "/df9a0d86-3283-4920-82dc-4555fc0d1d8b/" => "$docspath/metrics/")
+            return replace(content, "/f3bba2a0-7958-11e9-34b2-8fb942d32ac7/" => "$docspath/metrics/")
         else
             return content
         end
@@ -667,7 +667,7 @@ end
 """
     staticfiles(folder::String, mountdir::String; headers::Vector{Pair{String,String}}=[], loadfile::Union{Function,Nothing}=nothing)
 
-Mount all files inside the /static folder (or user defined mount point). 
+Mount all files inside the /static folder (or user defined mount point).
 The `headers` array will get applied to all mounted files
 """
 function staticfiles(router::HTTP.Router,
@@ -676,7 +676,7 @@ function staticfiles(router::HTTP.Router,
     headers::Vector=[],
     loadfile::Nullable{Function}=nothing
 )
-    # remove the leading slash 
+    # remove the leading slash
     if first(mountdir) == '/'
         mountdir = mountdir[2:end]
     end
@@ -691,7 +691,7 @@ end
 """
     dynamicfiles(folder::String, mountdir::String; headers::Vector{Pair{String,String}}=[], loadfile::Union{Function,Nothing}=nothing)
 
-Mount all files inside the /static folder (or user defined mount point), 
+Mount all files inside the /static folder (or user defined mount point),
 but files are re-read on each request. The `headers` array will get applied to all mounted files
 """
 function dynamicfiles(router::Router,
@@ -700,7 +700,7 @@ function dynamicfiles(router::Router,
     headers::Vector=[],
     loadfile::Nullable{Function}=nothing
 )
-    # remove the leading slash 
+    # remove the leading slash
     if first(mountdir) == '/'
         mountdir = mountdir[2:end]
     end
