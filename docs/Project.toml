@@ -4,4 +4,4 @@ Kitten = "f3bba2a0-7958-11e9-34b2-8fb942d32ac7"
 
 [compat]
 Documenter = "0.27"
-Kitten = "^0"
+Kitten = "^0.1"
