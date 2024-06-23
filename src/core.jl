@@ -30,12 +30,10 @@ export start, serve, serveparallel, terminate,
     internalrequest, staticfiles, dynamicfiles
 
 kitten_title = raw"""
-   ____
-  / __ \_  ____  ______ ____  ____
- / / / / |/_/ / / / __ `/ _ \/ __ \
-/ /_/ />  </ /_/ / /_/ /  __/ / / /
-\____/_/|_|\__, /\__, /\___/_/ /_/
-          /____//____/
+    ,  ,
+   /|_/   o  _|_  _|_   _
+    |\    |   |    |   |/  /|/|
+    | \_/ |/  |_/  |_/ |_/  | |_/
 
 """
 
@@ -622,7 +620,7 @@ function setupmetrics(router::Router, history::History, docspath::String, histor
         # only replace content if it's in a generated file
         ext = lowercase(last(splitext(filepath)))
         if ext in [".html", ".css", ".js"]
-            return replace(content, "/f3bba2a0-7958-11e9-34b2-8fb942d32ac7/" => "$docspath/metrics/")
+            return replace(content, "/123e4567-e89b-12d3-a456-426614174000/" => "$docspath/metrics/")
         else
             return content
         end

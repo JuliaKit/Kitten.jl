@@ -1,6 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-Kitten = "f3bba2a0-7958-11e9-34b2-8fb942d32ac7"
+Kitten = "123e4567-e89b-12d3-a456-426614174000"
 
 [compat]
 Documenter = "0.27"
