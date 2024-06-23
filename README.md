@@ -1303,4 +1303,5 @@ Deserialize the body of a request into a julia struct
 ## License
 
 MIT License, see [LICENSE.md](./LICENSE.md) for more information.
-Migrated from [Oxygen.jl](https://oxygenframework.github.io/Oxygen.jl/stable/) and modified to work with Kitten.jl
+
+Migrated from [Oxygen.jl](https://oxygenframework.github.io/Oxygen.jl/stable/) and modified to work with JuliaKit project.
